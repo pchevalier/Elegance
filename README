@@ -4,5 +4,3 @@ To begin:	autoreconf -vif -I m4 && ./configure
 To compile:	make -j
 To install:	sudo make install
 To run:		elegance
-
-test
