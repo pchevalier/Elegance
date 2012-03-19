@@ -1,0 +1,463 @@
+images {
+   image: "bg.png" COMP;
+   image: "bottom.png" COMP;
+   image: "top.png" COMP;
+   image: "left.png" COMP;
+   image: "right.png" COMP;
+}
+
+externals {
+   external: "elm";
+}
+
+collections {
+   color_classes {
+      color_class {
+         name:  "elegance_1";
+         color: 0 255 0 50;
+         color2: 0 0 0 0;
+         color3: 0 0 0 0;
+      }
+   }
+   // elegance's inwin theme
+   group { name: "elm/win/inwin/elegance";
+      parts {
+         part { name: "base";
+            type: RECT;
+            mouse_events: 1;
+            pointer_mode: NOGRAB;
+            description { state: "default" 0.0;
+               color: 0 0 0 0;
+            }
+            description { state: "visible" 0.0;
+               inherit: "default" 1.0;
+               color: 56 56 56 0;
+            }
+         }
+         part { name: "shad";
+            mouse_events:  0;
+            description { state: "default" 0.0;
+               rel1.to: "elm.swallow.content";
+               rel1.offset: -64 -64;
+               rel2.to: "elm.swallow.content";
+               rel2.offset: 63 63;
+               fill.smooth: 0;
+            }
+         }
+         part { name: "pop";
+            mouse_events: 1;
+            pointer_mode: NOGRAB;
+            description { state: "default" 0.0;
+               rel1.to: "elm.swallow.content";
+               rel1.offset: -5 -5;
+               rel2.to: "elm.swallow.content";
+               rel2.offset: 4 4;
+              }
+         }
+         part { name: "popover";
+            mouse_events: 0;
+            description { state: "default" 0.0;
+               rel1.to: "pop";
+               rel2.to: "pop";
+               rel2.relative: 1.0 0.5;
+            }
+         }
+         part { name: "elm.swallow.content";
+            type: SWALLOW;
+            description { state: "default" 0.0;
+               rel1.relative: 0.0 0.0;
+               rel2.relative: 1.0 1.0;
+            }
+         }
+      }
+      programs {
+         program { name: "show";
+            signal: "elm,action,show";
+            source: "elm";
+            action: STATE_SET "visible" 0.0;
+            target: "base";
+         }
+         program { name: "hide";
+            signal: "elm,action,hide";
+            source: "elm";
+            action: STATE_SET "default" 0.0;
+            target: "base";
+         }
+      }
+   }
+   // icons' declarations
+   group {
+      name: "top_icon";
+      parts {
+         part {
+            name:"icon";
+            type: IMAGE;
+            description {
+               image{
+                  normal: "top.png";
+               }
+            }
+         }
+      }
+   }
+   group {
+      name: "bottom_icon";
+      parts {
+         part {
+            name:"icon";
+            type: IMAGE;
+            description {
+               image{
+                  normal: "bottom.png";
+               }
+            }
+         }
+      }
+   }
+   group {
+      name: "right_icon";
+      parts {
+         part {
+            name:"icon";
+            type: IMAGE;
+            description {
+               image{
+                  normal: "right.png";
+               }
+            }
+         }
+      }
+   }
+   group {
+      name: "left_icon";
+      parts {
+         part {
+            name:"icon";
+            type: IMAGE;
+            description {
+               image{
+                  normal: "left.png";
+               }
+            }
+         }
+      }
+   }
+   // special theme for add-in object
+   group { name: "elm/layout/application/add_in_object";
+      parts {
+         part { name: "elm.swallow.add_in_object"; type: SWALLOW;
+            mouse_events: 0;
+            description { state: "default" 0.0;
+               fixed: 1 1;
+               rel1 {
+                  relative: 0.0 0.0;
+               }
+               rel2 {
+                  relative: 1.0 1.0;
+               }
+            }
+         }
+         part { name: "bg.add_in_object"; type: RECT;
+            pointer_mode: NOGRAB;
+            description { state: "default" 0.0;
+               color_class: "elegance_1";
+               rel1 {
+                  to: "elm.swallow.add_in_object";
+               }
+               rel2 {
+                  to: "elm.swallow.add_in_object";
+               }
+            }
+         }
+      }
+   }
+   // Main theme
+   group { name: "elm/layout/application/elegance_main";
+      parts {
+         part { name: "elm.swallow.view"; type: SWALLOW;
+            description { state: "default" 0.0;
+               rel1 {
+                  to_x: "elm.swallow.left_panel";
+                  to_y: "elm.swallow.top_panel";
+                  relative: 1.0 1.0;
+               }
+               rel2 {
+                  to_x: "elm.swallow.right_panel";
+                  to_y: "elm.swallow.bottom_panel";
+                  relative: 0.0 0.0;
+               }
+            }
+         }
+         part { name: "elm.swallow.top_panel"; type: SWALLOW;
+            pointer_mode: NOGRAB;
+            description { state: "default" 0.0;
+               min: 100 100;
+               rel1 {
+                  to_x: "elm.swallow.left_panel";
+                  relative: 1.0 0.0;
+               }
+               rel2 {
+                  to_x: "elm.swallow.right_panel";
+                  relative: 0.0 0.20;
+               }
+            }
+            description { state: "hide" 0.0;
+               inherit: "default" 0.0;
+               rel1 {
+                  to_x: "elm.swallow.left_panel";
+                  relative: 1.0 -0.20;
+               }
+               rel2 {
+                  to_x: "elm.swallow.right_panel";
+                  relative: 0.0 0.0;
+               }
+            }
+         }
+         part { name: "button_top"; type: EXTERNAL;
+            source: "elm/button";
+            description { state: "default" 0.0;
+               align: 0.5 0.0;
+               max: 48 32;
+               rel1 {
+                  to_y: "elm.swallow.top_panel";
+                  relative: 0.0 1.0;
+               }
+               rel2 {
+                  to_y: "elm.swallow.bottom_panel";
+                  relative: 1.0 0.0;
+               }
+               params {
+                  string: "icon" "top_icon";
+               }
+            }
+            description { state: "hide" 0.0;
+               inherit: "default" 0.0;
+               params {
+                  string: "icon" "bottom_icon";
+               }
+            }
+         }
+         part { name: "elm.swallow.bottom_panel"; type: SWALLOW;
+            pointer_mode: NOGRAB;
+            description { state: "default" 0.0;
+               min: 100 100;
+               rel1 {
+                  to_x: "elm.swallow.left_panel";
+                  relative: 1.0 0.8;
+               }
+               rel2 {
+                  to_x: "elm.swallow.right_panel";
+                  relative: 0.0 1.0;
+               }
+            }
+            description { state: "hide" 0.0;
+               inherit: "default" 0.0;
+               rel1 {
+                  to_x: "elm.swallow.left_panel";
+                  relative: 1.0 1.0;
+               }
+               rel2 {
+                  to_x: "elm.swallow.right_panel";
+                  relative: 0.0 1.2;
+               }
+            }
+         }
+         part { name: "button_bottom"; type: EXTERNAL;
+            source: "elm/button";
+            description { state: "default" 0.0;
+               align: 0.5 1.0;
+               max: 48 32;
+               rel1 {
+                  to_y: "elm.swallow.top_panel";
+                  relative: 0.0 1.0;
+               }
+               rel2 {
+                  to_y: "elm.swallow.bottom_panel";
+                  relative: 1.0 0.0;
+               }
+               params {
+                  string: "icon" "bottom_icon";
+               }
+            }
+            description { state: "hide" 0.0;
+               inherit: "default" 0.0;
+               params {
+                  string: "icon" "top_icon";
+               }
+            }
+         }
+         part { name: "elm.swallow.right_panel"; type: SWALLOW;
+            pointer_mode: NOGRAB;
+            description { state: "default" 0.0;
+               min: 100 100;
+               rel1 {
+                  relative: 0.80 0.0;
+               }
+               rel2 {
+                  relative: 1.0 1.0;
+               }
+            }
+            description { state: "hide" 0.0;
+               inherit: "default" 0.0;
+               rel1 {
+                  relative: 1.0 0.0;
+               }
+               rel2 {
+                  relative: 1.2 1.0;
+               }
+            }
+         }
+         part { name: "button_right"; type: EXTERNAL;
+            source: "elm/button";
+            description { state: "default" 0.0;
+               align: 1.0 0.5;
+               max: 32 48;
+               rel1 {
+                  to_x: "elm.swallow.left_panel";
+                  relative: 1.0 0.0;
+               }
+               rel2 {
+                  to_x: "elm.swallow.right_panel";
+                  relative: 0.0 1.0;
+               }
+               params {
+                  string: "icon" "right_icon";
+               }
+            }
+            description { state: "hide" 0.0;
+               inherit: "default" 0.0;
+               params {
+                  string: "icon" "left_icon";
+               }
+            }
+         }
+         part { name: "elm.swallow.left_panel"; type: SWALLOW;
+            pointer_mode: NOGRAB;
+            description { state: "default" 0.0;
+               min: 100 100;
+               rel1 {
+                  relative: 0.0 0.0;
+               }
+               rel2 {
+                  relative: 0.2 1.0;
+               }
+            }
+            description { state: "hide" 0.0;
+               inherit: "default" 0.0;
+               rel1 {
+                  relative: -0.2 0.0;
+               }
+               rel2 {
+                  relative: 0.0 1.0;
+               }
+            }
+         }
+         part { name: "button_left"; type: EXTERNAL;
+            source: "elm/button";
+            description { state: "default" 0.0;
+               align: 0.0 0.5;
+               max: 32 48;
+               rel1 {
+                  to_x: "elm.swallow.left_panel";
+                  relative: 1.0 0.0;
+               }
+               rel2 {
+                  to_x: "elm.swallow.right_panel";
+                  relative: 0.0 1.0;
+               }
+               params {
+                  string: "icon" "left_icon";
+               }
+            }
+            description { state: "hide" 0.0;
+               inherit: "default" 0.0;
+               params {
+                  string: "icon" "right_icon";
+               }
+            }
+         }
+      }
+      programs {
+         program {
+            name: "hide_right_panel";
+            signal: "mouse,clicked,*";
+            source: "button_right";
+            filter: "elm.swallow.right_panel" "default";
+            action: STATE_SET "hide" 0.0;
+            transition: SIN 0.3;
+            target: "elm.swallow.right_panel";
+            target: "button_right";
+         }
+         program {
+            name: "show_right_panel";
+            signal: "mouse,clicked,*";
+            source: "button_right";
+            filter: "elm.swallow.right_panel" "hide";
+            action: STATE_SET "default" 0.0;
+            transition: SIN 0.3;
+            target: "elm.swallow.right_panel";
+            target: "button_right";
+         }
+         program {
+            name: "hide_bottom_panel";
+            signal: "mouse,clicked,*";
+            source: "button_bottom";
+            filter: "elm.swallow.bottom_panel" "default";
+            action: STATE_SET "hide" 0.0;
+            transition: SIN 0.3;
+            target: "elm.swallow.bottom_panel";
+            target: "button_bottom";
+         }
+         program {
+            name: "show_bottom_panel";
+            signal: "mouse,clicked,*";
+            source: "button_bottom";
+            filter: "elm.swallow.bottom_panel" "hide";
+            action: STATE_SET "default" 0.0;
+            transition: SIN 0.3;
+            target: "elm.swallow.bottom_panel";
+            target: "button_bottom";
+         }
+         program {
+            name: "hide_top_panel";
+            signal: "mouse,clicked,*";
+            source: "button_top";
+            filter: "elm.swallow.top_panel" "default";
+            action: STATE_SET "hide" 0.0;
+            transition: SIN 0.3;
+            target: "elm.swallow.top_panel";
+            target: "button_top";
+         }
+         program {
+            name: "show_top_panel";
+            signal: "mouse,clicked,*";
+            source: "button_top";
+            filter: "elm.swallow.top_panel" "hide";
+            action: STATE_SET "default" 0.0;
+            transition: SIN 0.3;
+            target: "elm.swallow.top_panel";
+            target: "button_top";
+         }
+         program {
+            name: "hide_left_panel";
+            signal: "mouse,clicked,*";
+            source: "button_left";
+            filter: "elm.swallow.left_panel" "default";
+            action: STATE_SET "hide" 0.0;
+            transition: SIN 0.3;
+            target: "elm.swallow.left_panel";
+            target: "button_left";
+         }
+         program {
+            name: "show_left_panel";
+            signal: "mouse,clicked,*";
+            source: "button_left";
+            filter: "elm.swallow.left_panel" "hide";
+            action: STATE_SET "default" 0.0;
+            transition: SIN 0.3;
+            target: "elm.swallow.left_panel";
+            target: "button_left";
+         }
+      }
+   }
+}

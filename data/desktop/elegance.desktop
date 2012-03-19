@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Elegance
+Comment=GUI editor and designer for Elementary
+Exec=elegance %F
+Icon=elegance
+Terminal=false
+Type=Application
+StartupWMClass=Elegance
+Categories=ENLIGHTENMENT;Application;Development;
+
