@@ -181,12 +181,10 @@ add_in_container(const Elegance_Tool *list,
   else
     new = list[i].function_add(design_win);
   elm_object_part_content_set(lay, "elm.swallow.add_in_object", new);
-  edje_object_color_class_set(elm_layout_edje_get(lay), "elegance_1",
+  edje_object_color_class_set(lay, "elegance_1",
 			      rand()%256, rand()%256, rand()%256, 40,
 			      0, 0, 0, 0,
 			      0, 0, 0, 0);
-  evas_object_pointer_mode_set(new, EVAS_OBJECT_POINTER_MODE_NOGRAB);
-  evas_object_repeat_events_set(new, EINA_TRUE);
 
   content->obj = new;
   content->lay = lay;
@@ -197,7 +195,6 @@ add_in_container(const Elegance_Tool *list,
   dnd_target_register(lay);
   evas_object_show(lay);
   evas_object_show(new);
-  status_refresh();
 }
 
 //--// public routines
@@ -294,14 +291,13 @@ palette_refresh(Evas_Object *icon,
 	lay = elm_layout_add(design_win);
 	evas_object_size_hint_weight_set(lay, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 	elm_layout_theme_set(lay, "layout", "application", "add_in_object");
-	elm_win_inwin_content_set(view_inwin, lay);
+	actual_content->tool.function_pack(actual_content->obj, lay,
+					   NULL, NULL, NULL, NULL);
 
 	new = container_list[i].function_add(design_win);
-	evas_object_pointer_mode_set(new, EVAS_OBJECT_POINTER_MODE_NOGRAB);
-	evas_object_repeat_events_set(new, EINA_TRUE);
 	elm_object_part_content_set(lay,
 				    "elm.swallow.add_in_object", new);
-	edje_object_color_class_set(elm_layout_edje_get(lay), "elegance_1",
+	edje_object_color_class_set(lay, "elegance_1",
 				    rand()%256, rand()%256, rand()%256, 30,
 				    0, 0, 0, 0,
 				    0, 0, 0, 0);
@@ -320,8 +316,6 @@ palette_refresh(Evas_Object *icon,
 	evas_object_show(new);
 
 	palette_add_contents(design_win);
-
-        status_refresh();
       }
     }
   }

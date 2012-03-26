@@ -79,7 +79,7 @@ serialize_init(void)
   actual_project->pages = NULL;
 
   actual_page = malloc(sizeof(Elegance_Page));
-  actual_page->name = strdup("page");
+  actual_page->name = strdup("Page 1");
   actual_page->contents = NULL;
   actual_project->pages = eina_list_append(actual_project->pages,
 					   actual_page);

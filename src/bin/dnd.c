@@ -185,11 +185,13 @@ _dnd_finish(Evas_Object *obj, Evas_Coord x, Evas_Coord y)
 
   elm_object_scroll_freeze_pop(obj);
   o = _dnd_target_find(x, y);
+  find_and_refresh_top_actual_content(actual_page->contents, x, y);
 
-  find_and_refresh_top_actual_content(actual_page->contents,
-				      x, y);
   if (o != NULL)
+  {
     palette_refresh(obj, x, y);
+    status_refresh();
+  }
 
   evas_object_del(dnd_icon);
   evas_object_data_del(obj, "--dnd_icon");

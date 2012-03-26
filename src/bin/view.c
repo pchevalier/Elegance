@@ -15,7 +15,7 @@ view_add(void)
   Evas_Object *lay, *inwin;
   Elegance_Content *content;
   Elegance_Tool tool = {"special", "special", "special", "special", "special",
-			NULL, NULL};
+			elm_win_inwin_add, elm_win_inwin_content_set };
 
   content = malloc(sizeof(Elegance_Content));
   content->name = strdup("inwin");
@@ -41,6 +41,5 @@ view_add(void)
   dnd_target_register(view_inwin);
   evas_object_show(lay);
   evas_object_show(inwin);
-
   status_refresh();
 }
