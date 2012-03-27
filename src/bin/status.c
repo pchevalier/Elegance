@@ -36,9 +36,7 @@ refresh_childs(Elegance_Content *data)
 {
   Evas_Object *new, *lay;
 
-  printf("        adding %s\n", data->name);
   lay = elm_layout_add(design_win);
-
   elm_layout_theme_set(lay, "layout", "application", "add_in_object");
   evas_object_size_hint_weight_set(lay, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
   evas_object_size_hint_align_set(lay, EVAS_HINT_FILL, EVAS_HINT_FILL);
@@ -60,14 +58,12 @@ refresh_childs(Elegance_Content *data)
 
     EINA_LIST_FOREACH(data->child, l_subchild, data_subchild)
     {
-      printf("        packer: %s\n", data->tool.name);
       lay_sub = refresh_childs(data_subchild);
       data->tool.function_pack(new, lay_sub,
 			       NULL, NULL, NULL, NULL);
     }
   }
   evas_object_show(lay);
-  printf("refresh %s finish\n", data->name);
   return lay;
 }
 
@@ -80,8 +76,6 @@ refresh_layout(Elegance_Gengrid_Item *item)
   EINA_LIST_FOREACH(item->page->contents, l, data)
   {
     Evas_Object *new = NULL;
-
-    printf("    adding %s\n", data->name);
 
     if(!strcmp(data->tool.type, "evas"))
       new = data->tool.function_add(evas_object_evas_get(design_win));
@@ -107,14 +101,12 @@ refresh_layout(Elegance_Gengrid_Item *item)
 
       EINA_LIST_FOREACH(data->child, l_subchild, data_subchild)
       {
-      	printf("    data: %s\n", data->tool.name);
 	lay = refresh_childs(data_subchild);
       	data->tool.function_pack(new, lay,
       				 NULL, NULL, NULL, NULL);
       }
     }
   }
-  printf("refresh finish\n");
   return item->lay;
 }
 
@@ -149,12 +141,8 @@ status_refresh(void)
 {
   Elegance_Gengrid_Item *item = NULL;
 
-  printf("status_refresh with %i items - ", status_grid->nb_items);
-
   if(status_grid->nb_items == 0)
   {
-    printf("append\n");
-
     item = malloc(sizeof(Elegance_Gengrid_Item));
     item->page = actual_page;
     item->lay = NULL;
@@ -167,11 +155,7 @@ status_refresh(void)
 			    item, NULL, NULL);
   }
   else
-  {
-    printf("update\n");
     elm_gengrid_realized_items_update(status_grid->gengrid);
-  }
-  printf("\n\n");
 }
 
 Evas_Object *
