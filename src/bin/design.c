@@ -29,7 +29,8 @@ design_win_new(void)
   // create new window base and set title and hook delete request
   design_win = win = elm_win_add(NULL, "main", ELM_WIN_BASIC);
   elm_win_title_set(win, "Elegance");
-  evas_object_smart_callback_add(win, "delete,request", _design_cb_win_del, NULL);
+  evas_object_smart_callback_add(win, "delete,request",
+				 _design_cb_win_del, NULL);
 
   // add a default background to the window
   bg = elm_bg_add(win);

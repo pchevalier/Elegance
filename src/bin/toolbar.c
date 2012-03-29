@@ -5,7 +5,9 @@
 //--// globals
 
 //--// callbacks
-static void
+
+//--// public routines
+void
 _toolbar_new_page_cb(void *data,
 		     Evas_Object *obj,
 		     void *event_info)
@@ -41,7 +43,7 @@ _toolbar_new_page_cb(void *data,
   status_refresh();
 }
 
-static void
+void
 _toolbar_new_project_cb(void *data,
 			Evas_Object *obj,
 			void *event_info)
@@ -49,7 +51,6 @@ _toolbar_new_project_cb(void *data,
   printf("new project\n");
 }
 
-//--// public routines
 Evas_Object *
 toolbar_add(Evas_Object *win)
 {

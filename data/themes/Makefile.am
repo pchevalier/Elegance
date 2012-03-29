@@ -4,7 +4,7 @@ MAINTAINERCLEANFILES = Makefile.in
 EDJE_CC = @edje_cc@
 EDJE_FLAGS = -v -id $(top_srcdir)/data/themes -fd $(top_srcdir)/data/themes
 filesdir = $(datadir)/elegance/themes
-files_DATA = elegance.edj
+files_DATA = elegance.edj plus.png
 
 EXTRA_DIST = \
 elegance.edc
