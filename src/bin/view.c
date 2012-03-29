@@ -10,6 +10,26 @@ Evas_Object *view_inwin = NULL;
 
 //--// public routines
 void
+view_clean(Eina_List *list)
+{
+  Elegance_Content *content;
+  Eina_List *contents;
+
+  EINA_LIST_FOREACH(list, contents, content)
+  {
+    if(content->child)
+      view_clean(content->child);
+    if (strcmp("inwin", content->name))
+    {
+      evas_object_del(content->obj);
+      evas_object_del(content->lay);
+      elm_object_part_content_unset(content->lay,
+				  "elm.swallow.add_in_object");
+    }
+  }
+}
+
+void
 view_add(void)
 {
   Evas_Object *lay, *inwin;

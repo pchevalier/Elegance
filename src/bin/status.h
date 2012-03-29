@@ -14,11 +14,13 @@ struct	       _Elegance_Gengrid
 {
   Eina_List			*items;
   Evas_Object			*gengrid;
-  int				nb_items;
+  Eina_Bool			new_page;
   Elm_Gengrid_Item_Class	*gic;
 };
 
 Evas_Object *status_add(Evas_Object *win);
 void status_refresh(void);
+
+extern Elegance_Gengrid *status_grid;
 
 #endif

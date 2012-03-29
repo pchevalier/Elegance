@@ -3,7 +3,7 @@
 //--// declarations
 
 //--// globals
-static Elegance_Gengrid *status_grid = NULL;
+Elegance_Gengrid *status_grid = NULL;
 
 //--// callbacks
 static char *
@@ -141,7 +141,7 @@ status_refresh(void)
 {
   Elegance_Gengrid_Item *item = NULL;
 
-  if(status_grid->nb_items == 0)
+  if(status_grid->new_page)
   {
     item = malloc(sizeof(Elegance_Gengrid_Item));
     item->page = actual_page;
@@ -149,10 +149,10 @@ status_refresh(void)
     item->name = actual_page->name;
     status_grid->items = eina_list_append(status_grid->items,
 					  item);
-    status_grid->nb_items++;
 
     elm_gengrid_item_append(status_grid->gengrid, status_grid->gic,
 			    item, NULL, NULL);
+    status_grid->new_page = EINA_FALSE;
   }
   else
     elm_gengrid_realized_items_update(status_grid->gengrid);
@@ -164,7 +164,7 @@ status_add(Evas_Object *win)
   Evas_Object *sc, *grid;
 
   status_grid = malloc(sizeof(Elegance_Gengrid));
-  status_grid->nb_items = 0;
+  status_grid->new_page = EINA_TRUE;
   status_grid->items = NULL;
 
   status_grid->gengrid = grid = elm_gengrid_add(win);

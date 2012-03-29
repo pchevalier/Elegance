@@ -8,6 +8,7 @@ static int num = 0;
 static Elm_Genlist_Item_Class itc;
 static Elm_Genlist_Item_Class itp;
 static Evas_Object *palette_list;
+static Eina_Bool hide_contents;
 
 // special list for container tools
 static const Elegance_Tool container_list[2] = {
@@ -85,7 +86,8 @@ gl_state_get(void *data __UNUSED__,
    return EINA_FALSE;
 }
 
-void gl_del(void *data __UNUSED__,
+void
+gl_del(void *data __UNUSED__,
 	    Evas_Object *obj __UNUSED__)
 {
 }
@@ -198,7 +200,6 @@ add_in_container(const Elegance_Tool *list,
 }
 
 //--// public routines
-
 // first adding function of palette that add containers into
 Evas_Object *
 palette_add(Evas_Object *win)
@@ -207,6 +208,7 @@ palette_add(Evas_Object *win)
   int i, x, y;
 
   // init genlist
+  hide_contents = EINA_FALSE;
   palette_list = o = init_palette_genlist(win);
   evas_object_show(o);
 
@@ -216,13 +218,12 @@ palette_add(Evas_Object *win)
 // second function to add other tools
 // after the adding of a container into the view
 void
-palette_add_contents(Evas_Object *win)
+palette_add_contents(void)
 {
   int i;
   Elm_Object_Item *gli;
-  static Eina_Bool done = EINA_FALSE;
 
-  if (!done)
+  if (!hide_contents)
   {
     // add other tools into the palette's tab
     gli = elm_genlist_item_append(palette_list, &itp, &elm_list, NULL,
@@ -244,7 +245,27 @@ palette_add_contents(Evas_Object *win)
 			      ELM_GENLIST_ITEM_NONE,
 			      NULL, NULL);
     }
-    done = EINA_TRUE;
+    hide_contents = EINA_TRUE;
+  }
+}
+
+void
+palette_hide_contents(void)
+{
+  if (hide_contents)
+  {
+    Eina_List *list = elm_genlist_realized_items_get(palette_list), *l;
+    Elm_Object_Item *it;
+    int i = 0;
+
+    EINA_LIST_REVERSE_FOREACH(list, l, it)
+    {
+      if (i < sizeof(elm_list)/sizeof(elm_list[0]) +
+	  sizeof(evas_list)/sizeof(evas_list[0]) + 2)
+	elm_object_item_del(it);
+      i++;
+    }
+    hide_contents = EINA_FALSE;
   }
 }
 
@@ -315,7 +336,7 @@ palette_refresh(Evas_Object *icon,
 	evas_object_show(lay);
 	evas_object_show(new);
 
-	palette_add_contents(design_win);
+	palette_add_contents();
       }
     }
   }
