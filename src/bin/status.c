@@ -145,10 +145,8 @@ _grid_content_get(void        *data,
       evas_object_size_hint_weight_set(image, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
       evas_object_size_hint_align_set(image, EVAS_HINT_FILL, EVAS_HINT_FILL);
       elm_image_file_set(image, PACKAGE_DATA_DIR"/themes/plus.png", NULL);
-
       evas_object_event_callback_add(image, EVAS_CALLBACK_MOUSE_DOWN,
 				     _call_new_page_cb, NULL);
-
       return image;
     }
 
@@ -198,6 +196,10 @@ status_refresh(void)
   }
   else
     elm_gengrid_realized_items_update(status_grid->gengrid);
+
+  printf("focus\n");
+  elm_gengrid_item_show(elm_gengrid_last_item_get(status_grid->gengrid),
+			ELM_GENGRID_ITEM_SCROLLTO_IN);
 }
 
 Evas_Object *
@@ -216,6 +218,7 @@ status_add(Evas_Object *win)
   evas_object_size_hint_align_set(grid, EVAS_HINT_FILL, EVAS_HINT_FILL);
   elm_gengrid_align_set(grid, 0, 0.5);
   elm_gengrid_multi_select_set(grid, EINA_FALSE);
+  elm_gengrid_select_mode_set(grid, ELM_OBJECT_SELECT_MODE_NONE);
 
   status_grid->gic = elm_gengrid_item_class_new();
   status_grid->gic->item_style = "default";
