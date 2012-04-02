@@ -197,7 +197,7 @@ status_refresh(void)
   else
     elm_gengrid_realized_items_update(status_grid->gengrid);
 
-  printf("focus\n");
+  // to fix
   elm_gengrid_item_show(elm_gengrid_last_item_get(status_grid->gengrid),
 			ELM_GENGRID_ITEM_SCROLLTO_IN);
 }
