@@ -18,11 +18,11 @@ _grid_label_get(void        *data,
 
 
 static Eina_Bool
-_grid_state_get(void        *data __UNUSED__,
+_grid_state_get(void        *data,
                 Evas_Object *obj __UNUSED__,
                 const char  *part __UNUSED__)
 {
-   return EINA_FALSE;
+  return EINA_FALSE;
 }
 
 static void
@@ -31,7 +31,7 @@ _grid_del(void        *data,
 {
 }
 
-static Evas_Object *
+Evas_Object *
 refresh_childs(Elegance_Content *data)
 {
   Evas_Object *new, *lay;
@@ -119,6 +119,22 @@ _call_new_page_cb(void *data,
   _toolbar_new_page_cb(NULL, NULL, NULL);
 }
 
+static void
+_call_reload_cb(void *data,
+		Evas *e,
+		Evas_Object *obj,
+		void *event_info)
+{
+  Elegance_Gengrid_Item *item = data;
+  Evas_Object *lay;
+
+  view_clean(actual_page->contents);
+  actual_page = item->page;
+
+  lay = view_reload(actual_page->contents);
+  elm_object_part_content_set(design_layout, "elm.swallow.view", lay);
+}
+
 static Evas_Object *
 _grid_content_get(void        *data,
 		  Evas_Object *obj,
@@ -145,13 +161,20 @@ _grid_content_get(void        *data,
       evas_object_size_hint_weight_set(image, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
       evas_object_size_hint_align_set(image, EVAS_HINT_FILL, EVAS_HINT_FILL);
       elm_image_file_set(image, PACKAGE_DATA_DIR"/themes/plus.png", NULL);
-      evas_object_event_callback_add(image, EVAS_CALLBACK_MOUSE_DOWN,
+      evas_object_event_callback_add(image, EVAS_CALLBACK_MOUSE_UP,
 				     _call_new_page_cb, NULL);
+      evas_object_show(image);
+
+      elm_gengrid_item_show(elm_gengrid_last_item_get(status_grid->gengrid),
+			    ELM_GENGRID_ITEM_SCROLLTO_IN);
+
       return image;
     }
 
     elm_layout_theme_set(lay, "layout", "application", "add_in_object");
     lay = refresh_layout(item);
+    evas_object_event_callback_add(lay, EVAS_CALLBACK_MOUSE_UP,
+				   _call_reload_cb, item);
     return lay;
   }
   return NULL;
@@ -188,18 +211,17 @@ status_refresh(void)
     status_grid->items = eina_list_append(status_grid->items,
 					  item);
 
-    elm_gengrid_item_insert_before(status_grid->gengrid, status_grid->gic,
-				   item, elm_gengrid_last_item_get(
-				     status_grid->gengrid),
+    elm_gengrid_item_insert_before(status_grid->gengrid, status_grid->gic, item,
+				   elm_gengrid_last_item_get(status_grid->gengrid),
 				   NULL, NULL);
+
     status_grid->new_page = EINA_FALSE;
   }
   else
     elm_gengrid_realized_items_update(status_grid->gengrid);
 
-  // to fix
-  elm_gengrid_item_show(elm_gengrid_last_item_get(status_grid->gengrid),
-			ELM_GENGRID_ITEM_SCROLLTO_IN);
+  evas_object_show(status_grid->gengrid);
+
 }
 
 Evas_Object *
@@ -219,6 +241,8 @@ status_add(Evas_Object *win)
   elm_gengrid_align_set(grid, 0, 0.5);
   elm_gengrid_multi_select_set(grid, EINA_FALSE);
   elm_gengrid_select_mode_set(grid, ELM_OBJECT_SELECT_MODE_NONE);
+  elm_gengrid_scroller_policy_set(grid, ELM_SCROLLER_POLICY_AUTO,
+				  ELM_SCROLLER_POLICY_OFF);
 
   status_grid->gic = elm_gengrid_item_class_new();
   status_grid->gic->item_style = "default";

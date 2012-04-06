@@ -194,7 +194,6 @@ add_in_container(const Elegance_Tool *list,
   content->tool = list[i];
   actual_content->child = eina_list_append(actual_content->child, content);
 
-  dnd_target_register(lay);
   evas_object_show(lay);
   evas_object_show(new);
 }
@@ -218,7 +217,7 @@ palette_add(Evas_Object *win)
 // second function to add other tools
 // after the adding of a container into the view
 void
-palette_add_contents(void)
+palette_refresh(void)
 {
   int i;
   Elm_Object_Item *gli;
@@ -271,7 +270,7 @@ palette_hide_contents(void)
 
 // usefull function that detect if a container is added into the inwin (view)
 void
-palette_refresh(Evas_Object *icon,
+view_refresh(Evas_Object *icon,
 		Evas_Coord x,
 		Evas_Coord y)
 {
@@ -331,12 +330,10 @@ palette_refresh(Evas_Object *icon,
 						 content);
 	actual_content = content;
 
-	dnd_target_register(new);
-	dnd_target_unregister(view_inwin);
 	evas_object_show(lay);
 	evas_object_show(new);
 
-	palette_add_contents();
+	palette_refresh();
       }
     }
   }

@@ -189,7 +189,7 @@ _dnd_finish(Evas_Object *obj, Evas_Coord x, Evas_Coord y)
 
   if (o != NULL)
   {
-    palette_refresh(obj, x, y);
+    view_refresh(obj, x, y);
     status_refresh();
   }
 

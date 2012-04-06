@@ -19,13 +19,61 @@ view_clean(Eina_List *list)
   {
     if(content->child)
       view_clean(content->child);
-    if (strcmp("inwin", content->name))
-    {
+    /* if (strcmp(content->name, "inwin")) */
+    /* { */
+      dnd_target_unregister(content->lay);
       evas_object_del(content->obj);
       evas_object_del(content->lay);
       elm_object_part_content_unset(content->lay,
-				  "elm.swallow.add_in_object");
+				    "elm.swallow.add_in_object");
+    /* } */
+  }
+}
+
+Evas_Object *
+view_reload(Eina_List *list)
+{
+  Elegance_Content *content;
+  Eina_List *contents;
+
+  EINA_LIST_FOREACH(list, contents, content)
+  {
+    Evas_Object *lay, *new;
+
+    content->lay = lay = elm_layout_add(design_win);
+    evas_object_size_hint_weight_set(lay, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+    evas_object_size_hint_align_set(lay, EVAS_HINT_FILL, EVAS_HINT_FILL);
+    elm_layout_theme_set(lay, "layout", "application", "add_in_object");
+
+    if(!strcmp(content->tool.type, "evas"))
+      new = content->tool.function_add(evas_object_evas_get(design_win));
+    else
+      new = content->tool.function_add(design_win);
+    elm_object_part_content_set(lay, "elm.swallow.add_in_object", new);
+    edje_object_color_class_set(lay, "elegance_1",
+				rand()%256, rand()%256, rand()%256, 40,
+				0, 0, 0, 0,
+				0, 0, 0, 0);
+    if (!strcmp(content->name, "inwin"))
+      elm_object_style_set(new, "elegance");
+
+    content->obj = new;
+    evas_object_show(lay);
+
+    if(content->child)
+    {
+      Eina_List *l_subchild;
+      Elegance_Content *data_subchild;
+      Evas_Object *sublay;
+
+      EINA_LIST_FOREACH(content->child, l_subchild, data_subchild)
+      {
+	sublay = refresh_childs(data_subchild);
+	content->tool.function_pack(content->obj, sublay,
+				    NULL, NULL, NULL, NULL);
+      }
     }
+    return content->lay;
   }
 }
 

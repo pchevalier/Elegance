@@ -20,6 +20,7 @@ struct	       _Elegance_Gengrid
 
 Evas_Object *status_add(Evas_Object *win);
 void status_refresh(void);
+Evas_Object *refresh_childs(Elegance_Content *data);
 
 extern Elegance_Gengrid *status_grid;
 
