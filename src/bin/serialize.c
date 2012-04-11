@@ -74,14 +74,23 @@ serialize_print(void)
 void
 serialize_init(void)
 {
-  actual_project = malloc(sizeof(Elegance_Project));
-  actual_project->name = strdup("project");
-  actual_project->pages = NULL;
+  printf("serialize_init\n");
 
-  actual_page = malloc(sizeof(Elegance_Page));
-  actual_page->name = strdup("Page 1");
-  actual_page->contents = NULL;
+  Elegance_Project *project;
+  Elegance_Page *page;
+
+  project = malloc(sizeof(Elegance_Project));
+  project->name = strdup("project");
+  project->pages = NULL;
+
+  actual_project = project;
+
+  page = malloc(sizeof(Elegance_Page));
+  page->name = strdup("Page 1");
+  page->contents = NULL;
+
   actual_project->pages = eina_list_append(actual_project->pages,
-					   actual_page);
+					   page);
+  actual_page = page;
 }
 

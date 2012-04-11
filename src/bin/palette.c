@@ -127,6 +127,8 @@ init_palette_genlist(Evas_Object *win)
   Elm_Object_Item *gli = NULL, *git = NULL;
   int i = 0;
 
+  printf("init_palette_genlist\n");
+
   itc.item_style     = "default";
   itc.func.text_get  = gl_text_get;
   itc.func.content_get  = gl_content_get;
@@ -166,6 +168,7 @@ add_in_container(const Elegance_Tool *list,
   Evas_Object *new, *lay;
   Elegance_Content *content;
 
+  printf("add_in_container\n");
 
   content = malloc(sizeof(Elegance_Content));
   content->name = strdup(list[i].name);
@@ -206,6 +209,8 @@ palette_add(Evas_Object *win)
   Evas_Object *o;
   int i, x, y;
 
+  printf("palette_add\n");
+
   // init genlist
   hide_contents = EINA_FALSE;
   palette_list = o = init_palette_genlist(win);
@@ -221,6 +226,8 @@ palette_refresh(void)
 {
   int i;
   Elm_Object_Item *gli;
+
+  printf("palette_refresh\n");
 
   if (!hide_contents)
   {
@@ -251,6 +258,8 @@ palette_refresh(void)
 void
 palette_hide_contents(void)
 {
+  printf("palette_hide_contents\n");
+
   if (hide_contents)
   {
     Eina_List *list = elm_genlist_realized_items_get(palette_list), *l;
@@ -271,14 +280,16 @@ palette_hide_contents(void)
 // usefull function that detect if a container is added into the inwin (view)
 void
 view_refresh(Evas_Object *icon,
-		Evas_Coord x,
-		Evas_Coord y)
+	     Evas_Coord x,
+	     Evas_Coord y)
 {
   char *buf;
   int i = 0;
 
+  printf("view_refresh -- %s\n", actual_content->name);
+
   buf = evas_object_data_get(icon, "--dnd_type");
-  if (strcmp(actual_content->tool.name, "special"))
+  if (strcmp(actual_content->name, "inwin"))
   {
     for (i = 0; i < sizeof(elm_list) / sizeof(elm_list[0]); i++)
     {

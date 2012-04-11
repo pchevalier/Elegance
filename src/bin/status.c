@@ -36,6 +36,8 @@ refresh_childs(Elegance_Content *data)
 {
   Evas_Object *new, *lay;
 
+  printf("refresh_childs -- %s\n", data->name);
+
   lay = elm_layout_add(design_win);
   elm_layout_theme_set(lay, "layout", "application", "add_in_object");
   evas_object_size_hint_weight_set(lay, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
@@ -72,6 +74,8 @@ refresh_layout(Elegance_Gengrid_Item *item)
 {
   Eina_List *l;
   Elegance_Content *data;
+
+  printf("refresh_layout\n");
 
   EINA_LIST_FOREACH(item->page->contents, l, data)
   {
@@ -116,6 +120,8 @@ _call_new_page_cb(void *data,
 		  Evas_Object *obj,
 		  void *event_info)
 {
+  printf("_call_new_page_cb\n");
+
   _toolbar_new_page_cb(NULL, NULL, NULL);
 }
 
@@ -128,11 +134,12 @@ _call_reload_cb(void *data,
   Elegance_Gengrid_Item *item = data;
   Evas_Object *lay;
 
+  printf("_call_reload_cb\n");
+
   view_clean(actual_page->contents);
   actual_page = item->page;
 
-  lay = view_reload(actual_page->contents);
-  elm_object_part_content_set(design_layout, "elm.swallow.view", lay);
+  view_reload(actual_page->contents);
 }
 
 static Evas_Object *
@@ -146,6 +153,8 @@ _grid_content_get(void        *data,
   {
     Evas_Object *lay;
 
+    printf("_grid_content_get\n");
+
     lay = elm_layout_add(design_win);
     evas_object_size_hint_weight_set(lay, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
     evas_object_size_hint_align_set(lay, EVAS_HINT_FILL, EVAS_HINT_FILL);
@@ -156,6 +165,8 @@ _grid_content_get(void        *data,
     if(!item->page)
     {
       Evas_Object *image;
+
+      printf("_grid_content_get -- new_button\n");
 
       image = elm_image_add(lay);
       evas_object_size_hint_weight_set(image, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
@@ -170,6 +181,8 @@ _grid_content_get(void        *data,
 
       return image;
     }
+
+    printf("_grid_content_get -- new_page\n");
 
     elm_layout_theme_set(lay, "layout", "application", "add_in_object");
     lay = refresh_layout(item);
@@ -189,6 +202,8 @@ status_refresh(void)
 
   if(!button_plus)
   {
+    printf("status_refresh -- button_plus\n");
+
     item_plus = malloc(sizeof(Elegance_Gengrid_Item));
     item_plus->page = NULL;
     item_plus->lay = NULL;
@@ -204,6 +219,8 @@ status_refresh(void)
 
   if(status_grid->new_page)
   {
+    printf("status_refresh -- new_page\n");
+
     item = malloc(sizeof(Elegance_Gengrid_Item));
     item->page = actual_page;
     item->lay = NULL;
@@ -217,8 +234,7 @@ status_refresh(void)
 
     status_grid->new_page = EINA_FALSE;
   }
-  else
-    elm_gengrid_realized_items_update(status_grid->gengrid);
+  elm_gengrid_realized_items_update(status_grid->gengrid);
 
   evas_object_show(status_grid->gengrid);
 
@@ -228,6 +244,8 @@ Evas_Object *
 status_add(Evas_Object *win)
 {
   Evas_Object *sc, *grid;
+
+  printf("status_add\n");
 
   status_grid = malloc(sizeof(Elegance_Gengrid));
   status_grid->new_page = EINA_TRUE;

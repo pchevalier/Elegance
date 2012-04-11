@@ -18,6 +18,8 @@ _toolbar_new_page_cb(void *data,
 			elm_win_inwin_add, elm_win_inwin_content_set };
   Evas_Object *lay, *new;
 
+  printf("_toolbar_new_page_cb\n");
+
   status_grid->new_page = EINA_TRUE;
   view_clean(actual_page->contents);
 
@@ -46,6 +48,8 @@ toolbar_add(Evas_Object *win)
 {
   Evas_Object *tb, *menu;
   Elm_Object_Item *tb_it;
+
+  printf("toolbar_add\n");
 
   // add toolbar to main win
   tb = elm_toolbar_add(win);
