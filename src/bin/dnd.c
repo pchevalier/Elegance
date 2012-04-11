@@ -158,7 +158,7 @@ find_and_refresh_top_actual_content(Eina_List *contents,
   Elegance_Content *data;
   Elegance_Content *new = NULL;
 
-  printf("find_and_refresh_top_actual_content -- %s\n");
+  printf("find_and_refresh_top_actual_content\n");
 
   if (!contents) return;
   EINA_LIST_FOREACH(contents, l, data)
