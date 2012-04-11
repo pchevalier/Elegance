@@ -73,8 +73,6 @@ view_reload(Eina_List *list)
   Elegance_Content *content;
   Eina_List *contents;
 
-  printf("view_reload\n");
-
   EINA_LIST_FOREACH(list, contents, content)
   {
     Evas_Object *lay, *new;

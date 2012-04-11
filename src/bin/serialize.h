@@ -15,6 +15,7 @@ typedef struct  _Elegance_Page Elegance_Page;
 struct		_Elegance_Page
 {
     char		*name;
+    Eina_Bool		hide_contents;
     Eina_List		*contents;
 };
 

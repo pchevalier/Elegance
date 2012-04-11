@@ -87,6 +87,7 @@ serialize_init(void)
 
   page = malloc(sizeof(Elegance_Page));
   page->name = strdup("Page 1");
+  page->hide_contents = EINA_TRUE;
   page->contents = NULL;
 
   actual_project->pages = eina_list_append(actual_project->pages,

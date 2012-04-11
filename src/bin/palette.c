@@ -8,7 +8,6 @@ static int num = 0;
 static Elm_Genlist_Item_Class itc;
 static Elm_Genlist_Item_Class itp;
 static Evas_Object *palette_list;
-static Eina_Bool hide_contents;
 
 // special list for container tools
 static const Elegance_Tool container_list[2] = {
@@ -212,7 +211,6 @@ palette_add(Evas_Object *win)
   printf("palette_add\n");
 
   // init genlist
-  hide_contents = EINA_FALSE;
   palette_list = o = init_palette_genlist(win);
   evas_object_show(o);
 
@@ -226,43 +224,19 @@ palette_refresh(void)
 {
   int i;
   Elm_Object_Item *gli;
+  Eina_List *list = elm_genlist_realized_items_get(palette_list);
+  int list_size = eina_list_count(list);
 
-  printf("palette_refresh\n");
+  printf("*********** DEBUG ********** palette_refresh - actual_page: %s\n", actual_page->name);
+  if (actual_page->hide_contents)
+    printf("****** TRUE ******\n");
+  else
+    printf("****** FALSE ******\n");
 
-  if (!hide_contents)
+  if((actual_page->hide_contents) &&
+     (list_size > sizeof(container_list)/sizeof(container_list[0])+1))
   {
-    // add other tools into the palette's tab
-    gli = elm_genlist_item_append(palette_list, &itp, &elm_list, NULL,
-				  ELM_GENLIST_ITEM_GROUP,
-				  NULL, NULL);
-    for(i = 0; i < sizeof(elm_list) / sizeof(elm_list[0]); i++)
-    {
-      elm_genlist_item_append(palette_list, &itc, &elm_list[i], gli,
-			      ELM_GENLIST_ITEM_NONE,
-			      NULL, NULL);
-    }
-
-    gli = elm_genlist_item_append(palette_list, &itp, &evas_list, NULL,
-				  ELM_GENLIST_ITEM_GROUP,
-				  NULL, NULL);
-    for(i = 0; i < sizeof(evas_list) / sizeof(evas_list[0]); i++)
-    {
-      elm_genlist_item_append(palette_list, &itc, &evas_list[i], gli,
-			      ELM_GENLIST_ITEM_NONE,
-			      NULL, NULL);
-    }
-    hide_contents = EINA_TRUE;
-  }
-}
-
-void
-palette_hide_contents(void)
-{
-  printf("palette_hide_contents\n");
-
-  if (hide_contents)
-  {
-    Eina_List *list = elm_genlist_realized_items_get(palette_list), *l;
+    Eina_List *l;
     Elm_Object_Item *it;
     int i = 0;
 
@@ -273,7 +247,34 @@ palette_hide_contents(void)
 	elm_object_item_del(it);
       i++;
     }
-    hide_contents = EINA_FALSE;
+    return;
+  }
+
+  if(!actual_page->hide_contents)
+  {
+    if(list_size <=  sizeof(container_list)/sizeof(container_list[0])+1)
+    {
+      // add other tools into the palette's tab
+      gli = elm_genlist_item_append(palette_list, &itp, &elm_list, NULL,
+				    ELM_GENLIST_ITEM_GROUP,
+				    NULL, NULL);
+      for(i = 0; i < sizeof(elm_list) / sizeof(elm_list[0]); i++)
+      {
+	elm_genlist_item_append(palette_list, &itc, &elm_list[i], gli,
+				ELM_GENLIST_ITEM_NONE,
+				NULL, NULL);
+      }
+
+      gli = elm_genlist_item_append(palette_list, &itp, &evas_list, NULL,
+				    ELM_GENLIST_ITEM_GROUP,
+				    NULL, NULL);
+      for(i = 0; i < sizeof(evas_list) / sizeof(evas_list[0]); i++)
+      {
+	elm_genlist_item_append(palette_list, &itc, &evas_list[i], gli,
+				ELM_GENLIST_ITEM_NONE,
+				NULL, NULL);
+      }
+    }
   }
 }
 
@@ -340,6 +341,7 @@ view_refresh(Evas_Object *icon,
 	actual_content->child = eina_list_append(actual_content->child,
 						 content);
 	actual_content = content;
+	actual_page->hide_contents = EINA_FALSE;
 
 	evas_object_show(lay);
 	evas_object_show(new);

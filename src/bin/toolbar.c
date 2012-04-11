@@ -26,13 +26,14 @@ _toolbar_new_page_cb(void *data,
   page = malloc(sizeof(Elegance_Page));
   page->name = strdup("Page sup");
   page->contents = NULL;
+  page->hide_contents = EINA_TRUE;
   actual_project->pages = eina_list_append(actual_project->pages,
 					   page);
   actual_page = page;
 
   view_add();
 
-  palette_hide_contents();
+  palette_refresh();
 }
 
 void

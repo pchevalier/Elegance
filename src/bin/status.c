@@ -140,6 +140,7 @@ _call_reload_cb(void *data,
   actual_page = item->page;
 
   view_reload(actual_page->contents);
+  palette_refresh();
 }
 
 static Evas_Object *
