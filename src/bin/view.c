@@ -9,7 +9,7 @@ Evas_Object *view_inwin = NULL;
 //--// callbacks
 
 //--// private routines
-
+// recursive function for contents and their child
 static Evas_Object *
 view_reload_child(Elegance_Content *data)
 {
@@ -49,6 +49,7 @@ view_reload_child(Elegance_Content *data)
 }
 
 //--// public routines
+// clean working view
 void
 view_clean(Eina_List *list)
 {
@@ -67,6 +68,7 @@ view_clean(Eina_List *list)
   }
 }
 
+// function to reload a page into working view
 void
 view_reload(Eina_List *list)
 {
@@ -89,6 +91,7 @@ view_reload(Eina_List *list)
     else
       content->obj = new = content->tool.function_add(design_win);
 
+    // special part for inwin
     if (!strcmp(content->name, "inwin"))
     {
       elm_object_part_content_set(design_layout, "elm.swallow.view", lay);
@@ -108,6 +111,7 @@ view_reload(Eina_List *list)
     evas_object_show(lay);
     evas_object_show(new);
 
+    // run in recursion for child
     if(content->child)
     {
       Eina_List *l_subchild;
@@ -124,6 +128,7 @@ view_reload(Eina_List *list)
   }
 }
 
+// init working view
 void
 view_add(void)
 {
@@ -134,29 +139,38 @@ view_add(void)
 
   printf("view_add\n");
 
+  // new content
   content = malloc(sizeof(Elegance_Content));
   content->name = strdup("inwin");
 
+  // create the layout
   view_layout = lay = elm_layout_add(design_win);
   evas_object_size_hint_weight_set(lay, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+  // swallow it
   elm_object_part_content_set(design_layout, "elm.swallow.view", lay);
   elm_layout_theme_set(lay, "layout", "application", "add_in_object");
 
+  // create inwin and put it into layout
   view_inwin = inwin = elm_win_inwin_add(design_win);
   elm_object_part_content_set(lay, "elm.swallow.add_in_object", inwin);
   elm_object_style_set(inwin, "elegance");
   elm_win_inwin_activate(inwin);
 
+  // fill content's informations and add to current page
   content->obj = inwin;
   content->lay = lay;
   content->tool = tool;
   content->child = NULL;
   actual_page->contents = eina_list_append(actual_page->contents,
 					   content);
+  // focus this content
   actual_content = content;
 
+  // register layout for drag&drop
   dnd_target_register(view_layout);
   evas_object_show(lay);
   evas_object_show(inwin);
+
+  // refresh the status bar
   status_refresh();
 }

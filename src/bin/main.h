@@ -1,8 +1,8 @@
 #ifndef ELEGANCE_MAIN_H
 # define ELEGANCE_MAIN_H
+
 # include <Elementary.h>
 # include "config.h"
-//////////////////////////////////////////////////////////////////////////////
 # include "palette.h"
 # include "serialize.h"
 # include "design.h"

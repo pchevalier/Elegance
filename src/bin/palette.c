@@ -146,7 +146,6 @@ init_palette_genlist(Evas_Object *win)
   evas_object_size_hint_align_set(list, EVAS_HINT_FILL, EVAS_HINT_FILL);
   evas_object_show(list);
 
-  // fixme to erase
   gli = elm_genlist_item_append(list, &itp, &container_list, NULL,
 				ELM_GENLIST_ITEM_GROUP,
 				NULL, NULL);
@@ -222,24 +221,19 @@ palette_add(Evas_Object *win)
 void
 palette_refresh(void)
 {
-  int i;
-  Elm_Object_Item *gli;
+  int i = 0;
   Eina_List *list = elm_genlist_realized_items_get(palette_list);
   int list_size = eina_list_count(list);
 
-  printf("*********** DEBUG ********** palette_refresh - actual_page: %s\n", actual_page->name);
-  if (actual_page->hide_contents)
-    printf("****** TRUE ******\n");
-  else
-    printf("****** FALSE ******\n");
+  printf("palette_refresh\n");
 
   if((actual_page->hide_contents) &&
      (list_size > sizeof(container_list)/sizeof(container_list[0])+1))
   {
     Eina_List *l;
     Elm_Object_Item *it;
-    int i = 0;
 
+    // hide all items exept containers
     EINA_LIST_REVERSE_FOREACH(list, l, it)
     {
       if (i < sizeof(elm_list)/sizeof(elm_list[0]) +
@@ -254,6 +248,8 @@ palette_refresh(void)
   {
     if(list_size <=  sizeof(container_list)/sizeof(container_list[0])+1)
     {
+      Elm_Object_Item *gli;
+
       // add other tools into the palette's tab
       gli = elm_genlist_item_append(palette_list, &itp, &elm_list, NULL,
 				    ELM_GENLIST_ITEM_GROUP,

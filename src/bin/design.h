@@ -4,7 +4,7 @@
 void design_win_new(void);
 void design_exit   (void);
 
-extern Evas_Object *design_win;
-extern Evas_Object *design_layout;
+extern Evas_Object *design_win; // Elegance window
+extern Evas_Object *design_layout; // Elegance main layout
 
 #endif

@@ -5,8 +5,7 @@
 //--// globals
 
 //--// callbacks
-
-//--// public routines
+// callback for new page
 void
 _toolbar_new_page_cb(void *data,
 		     Evas_Object *obj,
@@ -20,22 +19,28 @@ _toolbar_new_page_cb(void *data,
 
   printf("_toolbar_new_page_cb\n");
 
+  // clean view and add new item to status's gengrid
   status_grid->new_page = EINA_TRUE;
   view_clean(actual_page->contents);
 
+  // add a new page to actual_project
   page = malloc(sizeof(Elegance_Page));
   page->name = strdup("Page sup");
   page->contents = NULL;
   page->hide_contents = EINA_TRUE;
   actual_project->pages = eina_list_append(actual_project->pages,
 					   page);
+  // focus this new page
   actual_page = page;
 
+  // create view again
   view_add();
 
+  // refresh palette to hide contents
   palette_refresh();
 }
 
+// callback to create a new project
 void
 _toolbar_new_project_cb(void *data,
 			Evas_Object *obj,
@@ -44,6 +49,8 @@ _toolbar_new_project_cb(void *data,
   printf("new project\n");
 }
 
+//--// public routines
+// init toolbar
 Evas_Object *
 toolbar_add(Evas_Object *win)
 {

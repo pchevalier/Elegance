@@ -31,6 +31,7 @@ _grid_del(void        *data,
 {
 }
 
+// return layout with contents for refresh_layout
 Evas_Object *
 refresh_childs(Elegance_Content *data)
 {
@@ -69,6 +70,7 @@ refresh_childs(Elegance_Content *data)
   return lay;
 }
 
+// load page's items into a layout
 static Evas_Object *
 refresh_layout(Elegance_Gengrid_Item *item)
 {
@@ -114,6 +116,7 @@ refresh_layout(Elegance_Gengrid_Item *item)
   return item->lay;
 }
 
+// callback for adding a new page
 static void
 _call_new_page_cb(void *data,
 		  Evas *e,
@@ -125,6 +128,7 @@ _call_new_page_cb(void *data,
   _toolbar_new_page_cb(NULL, NULL, NULL);
 }
 
+// callback for reloading a page
 static void
 _call_reload_cb(void *data,
 		Evas *e,
@@ -143,6 +147,7 @@ _call_reload_cb(void *data,
   palette_refresh();
 }
 
+// add-in gengrid function
 static Evas_Object *
 _grid_content_get(void        *data,
 		  Evas_Object *obj,
@@ -163,6 +168,7 @@ _grid_content_get(void        *data,
 
     item->lay = lay;
 
+    // special section for plus button
     if(!item->page)
     {
       Evas_Object *image;
@@ -195,12 +201,14 @@ _grid_content_get(void        *data,
 }
 
 //--// public routines
+// function to refresh status's gengrid
 void
 status_refresh(void)
 {
   Elegance_Gengrid_Item *item, *item_plus;
   static Eina_Bool button_plus = EINA_FALSE;
 
+  // call once to add a new page button in gengrid
   if(!button_plus)
   {
     printf("status_refresh -- button_plus\n");
@@ -218,6 +226,7 @@ status_refresh(void)
     button_plus = EINA_TRUE;
   }
 
+  // add a new item if there is a new page
   if(status_grid->new_page)
   {
     printf("status_refresh -- new_page\n");
@@ -235,12 +244,11 @@ status_refresh(void)
 
     status_grid->new_page = EINA_FALSE;
   }
+  // refresh gengrid's items
   elm_gengrid_realized_items_update(status_grid->gengrid);
-
-  evas_object_show(status_grid->gengrid);
-
 }
 
+// init function for status gengrid
 Evas_Object *
 status_add(Evas_Object *win)
 {
@@ -248,10 +256,12 @@ status_add(Evas_Object *win)
 
   printf("status_add\n");
 
+  // initialize contents' structure
   status_grid = malloc(sizeof(Elegance_Gengrid));
   status_grid->new_page = EINA_TRUE;
   status_grid->items = NULL;
 
+  // create gengrid
   status_grid->gengrid = grid = elm_gengrid_add(win);
   elm_gengrid_horizontal_set(grid, EINA_TRUE);
   elm_gengrid_item_size_set(grid, 125, 125);
@@ -263,6 +273,7 @@ status_add(Evas_Object *win)
   elm_gengrid_scroller_policy_set(grid, ELM_SCROLLER_POLICY_AUTO,
 				  ELM_SCROLLER_POLICY_OFF);
 
+  // initialisation of the gengrid item class
   status_grid->gic = elm_gengrid_item_class_new();
   status_grid->gic->item_style = "default";
   status_grid->gic->func.text_get = _grid_label_get;

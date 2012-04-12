@@ -3,23 +3,42 @@
 //--// declarations
 
 //--// globals
-
+// pointer to elegance function for initialisation of a box
 typedef Evas_Object *(*panel_content_add)(Evas_Object *win);
 
+// struc for contents of boxes' window
 typedef struct	_Panel_Builder	Panel_Builder;
 struct		_Panel_Builder
 {
-    int                 box;
-    const char		*name;
-    panel_content_add	function_add;
-    int			x_weight;
-    int			y_weight;
-    int			x_align;
-    int			y_align;
+    int                 box; // box number
+    const char		*name; // name of the edje part
+    panel_content_add	function_add; // elegance function to init box
+    int			x_weight; // usefull argument for window disposition
+    int			y_weight; // usefull argument for window disposition
+    int			x_align; // usefull argument for window disposition
+    int			y_align; // usefull argument for window disposition
 };
 
+  // +--------+--------------------------------+-----------+
+  // |box 3   |box 0                           |box 1      |
+  // |        |                                |           |
+  // |        |                                |           |
+  // |        +--------------------------------+           |
+  // |        |               |__|             |           |
+  // |        |                                |           |
+  // |        |__                            __|           |
+  // |        |__|                          |__|           |
+  // |        |                                |           |
+  // |        |                __              |           |
+  // |        |               |  |             |           |
+  // |        +--------------------------------+           |
+  // |        |box 2                           |           |
+  // +--------+--------------------------------+-----------+
+
+// window boxes
 static Evas_Object *boxes[4];
 
+// contents of boxes' window
 static const Panel_Builder build[5] = {
   { 0, "elm.swallow.top_panel", snippets_add,
     EVAS_HINT_EXPAND, EVAS_HINT_EXPAND, EVAS_HINT_FILL, EVAS_HINT_FILL },
@@ -36,7 +55,6 @@ static const Panel_Builder build[5] = {
 //--// callbacks
 
 //--// private routines
-
 static void
 panel_add(Evas_Object		*win,
 	  Evas_Object		*bx,
@@ -44,24 +62,31 @@ panel_add(Evas_Object		*win,
 {
   Evas_Object *o;
 
+  // init content of the box
   o = build[i].function_add(win);
 
+  // basic graphic functions
   evas_object_size_hint_weight_set(o, build[i].x_weight, build[i].y_weight);
   evas_object_size_hint_align_set(o, build[i].x_align, build[i].y_align);
+  // add content to box
   elm_box_pack_end(bx, o);
   evas_object_show(o);
 }
 
 //--// public routines
+// initialisation of panels' window
 void
 panels_add(void)
 {
   int		i = 0;
   Evas_Object	*o;
 
+  // for all boxes
   for (i = 0; i < sizeof (boxes) / sizeof (boxes[0]); i++)
   {
+    // add a box in window
     boxes[i] = elm_box_add(design_win);
+    // put it at the right place
     elm_object_part_content_set(design_layout,
 				build[i].name,
 				boxes[i]);

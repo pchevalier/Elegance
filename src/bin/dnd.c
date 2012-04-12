@@ -6,6 +6,7 @@
 static Evas_Coord dx, dy, dropx, dropy;
 static Eina_List *targets = NULL;
 
+//--// callbacks
 static int
 _dnd_sorter(const void *d1, const void *d2)
 {
@@ -149,6 +150,7 @@ _dnd_action(Evas_Object *obj, Dnd_Dir dir, Evas_Coord x, Evas_Coord y)
   }
 }
 
+// function to find the top container in (x1:y1)
 static void
 find_and_refresh_top_actual_content(Eina_List *contents,
 				    Evas_Coord x1,
@@ -201,7 +203,6 @@ _dnd_finish(Evas_Object *obj, Evas_Coord x, Evas_Coord y)
   evas_object_data_del(obj, "--dnd_icon");
 }
 
-//--// callbacks
 static void
 _dnd_mouse_down(void        *data,
                 Evas        *evas __UNUSED__,

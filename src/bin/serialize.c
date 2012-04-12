@@ -1,9 +1,9 @@
 #include "main.h"
 
 //--// declarations
-Elegance_Project *actual_project = NULL;
-Elegance_Page *actual_page = NULL;
-Elegance_Content *actual_content = NULL;
+Elegance_Project *actual_project = NULL; // actual opened project
+Elegance_Page *actual_page = NULL; // actual select page
+Elegance_Content *actual_content = NULL; // actual select content
 
 //--// globals
 static int lvl;
@@ -11,7 +11,7 @@ static int lvl;
 //--// callbacks
 
 //--// private routines
-// function to print childs of a content
+// function to print all childs of a content
 static void
 serialize_print_childs(Elegance_Content *obj2)
 {
@@ -25,12 +25,14 @@ serialize_print_childs(Elegance_Content *obj2)
     if(obj3->child)
     {
       lvl++;
+      // make recursion again
       serialize_print_childs(obj3);
       lvl--;
     }
   }
 }
 
+// private recursive function for printing all contents of a page
 static void
 serialize_print_contents(Elegance_Page *obj1)
 {
@@ -44,6 +46,7 @@ serialize_print_contents(Elegance_Page *obj1)
     if(obj2->child)
     {
       lvl++;
+      // recursive function for childs
       serialize_print_childs(obj2);
       lvl--;
     }
@@ -51,26 +54,32 @@ serialize_print_contents(Elegance_Page *obj1)
 }
 
 //--// public routines
+// this function can print all elements of the actual project
 void
 serialize_print(void)
 {
   Eina_List *l1;
   Elegance_Page *obj1;
 
+  // check for errors
   if (!actual_project) return;
 
+  // init lvl
   lvl = 0;
   printf("\n--------- Project Structure of %s - %i pages ---------\n",
 	 actual_project->name,
 	 eina_list_count(actual_project->pages));
+  // execute that to all page's project
   EINA_LIST_FOREACH(actual_project->pages, l1, obj1)
   {
     printf("Page named : %s\nThis page contains :\n", obj1->name);
+    // little recursive function for contents
     serialize_print_contents(obj1);
   }
   printf("*********************************************************\n");
 }
 
+// init main structure for serialization (see serialize.h)
 void
 serialize_init(void)
 {
@@ -79,19 +88,24 @@ serialize_init(void)
   Elegance_Project *project;
   Elegance_Page *page;
 
+  // new project
   project = malloc(sizeof(Elegance_Project));
   project->name = strdup("project");
   project->pages = NULL;
 
+  // focus this project with a global pointer
   actual_project = project;
 
+  // new page
   page = malloc(sizeof(Elegance_Page));
   page->name = strdup("Page 1");
   page->hide_contents = EINA_TRUE;
   page->contents = NULL;
 
+  // add this page to the actual project
   actual_project->pages = eina_list_append(actual_project->pages,
 					   page);
+  // focus this page with a global pointer
   actual_page = page;
 }
 
