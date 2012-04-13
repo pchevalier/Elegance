@@ -79,7 +79,6 @@ void
 panels_add(void)
 {
   int		i = 0;
-  Evas_Object	*o;
 
   // for all boxes
   for (i = 0; i < sizeof (boxes) / sizeof (boxes[0]); i++)

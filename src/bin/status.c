@@ -18,7 +18,7 @@ _grid_label_get(void        *data,
 
 
 static Eina_Bool
-_grid_state_get(void        *data,
+_grid_state_get(void        *data __UNUSED__,
                 Evas_Object *obj __UNUSED__,
                 const char  *part __UNUSED__)
 {
@@ -26,7 +26,7 @@ _grid_state_get(void        *data,
 }
 
 static void
-_grid_del(void        *data,
+_grid_del(void        *data __UNUSED__,
           Evas_Object *obj __UNUSED__)
 {
 }
@@ -37,7 +37,7 @@ refresh_childs(Elegance_Content *data)
 {
   Evas_Object *new, *lay;
 
-  printf("refresh_childs -- %s\n", data->name);
+  ELEGANCE_LOG("begin - data->name: %s", data->name);
 
   lay = elm_layout_add(design_win);
   elm_layout_theme_set(lay, "layout", "application", "add_in_object");
@@ -77,7 +77,7 @@ refresh_layout(Elegance_Gengrid_Item *item)
   Eina_List *l;
   Elegance_Content *data;
 
-  printf("refresh_layout\n");
+  ELEGANCE_LOG("begin");
 
   EINA_LIST_FOREACH(item->page->contents, l, data)
   {
@@ -118,27 +118,26 @@ refresh_layout(Elegance_Gengrid_Item *item)
 
 // callback for adding a new page
 static void
-_call_new_page_cb(void *data,
-		  Evas *e,
-		  Evas_Object *obj,
-		  void *event_info)
+_call_new_page_cb(void *data __UNUSED__,
+		  Evas *e __UNUSED__,
+		  Evas_Object *obj __UNUSED__,
+		  void *event_info __UNUSED__)
 {
-  printf("_call_new_page_cb\n");
+   ELEGANCE_LOG("begin");
 
   _toolbar_new_page_cb(NULL, NULL, NULL);
 }
 
 // callback for reloading a page
 static void
-_call_reload_cb(void *data,
-		Evas *e,
-		Evas_Object *obj,
-		void *event_info)
+_call_reload_cb(void *data __UNUSED__,
+		Evas *e __UNUSED__,
+		Evas_Object *obj __UNUSED__,
+		void *event_info __UNUSED__)
 {
   Elegance_Gengrid_Item *item = data;
-  Evas_Object *lay;
 
-  printf("_call_reload_cb\n");
+  ELEGANCE_LOG("begin");
 
   view_clean(actual_page->contents);
   actual_page = item->page;
@@ -150,7 +149,7 @@ _call_reload_cb(void *data,
 // add-in gengrid function
 static Evas_Object *
 _grid_content_get(void        *data,
-		  Evas_Object *obj,
+		  Evas_Object *obj __UNUSED__,
 		  const char  *part)
 {
   Elegance_Gengrid_Item *item = data;
@@ -159,7 +158,7 @@ _grid_content_get(void        *data,
   {
     Evas_Object *lay;
 
-    printf("_grid_content_get\n");
+    ELEGANCE_LOG("begin");
 
     lay = elm_layout_add(design_win);
     evas_object_size_hint_weight_set(lay, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
@@ -172,8 +171,6 @@ _grid_content_get(void        *data,
     if(!item->page)
     {
       Evas_Object *image;
-
-      printf("_grid_content_get -- new_button\n");
 
       image = elm_image_add(lay);
       evas_object_size_hint_weight_set(image, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
@@ -188,8 +185,6 @@ _grid_content_get(void        *data,
 
       return image;
     }
-
-    printf("_grid_content_get -- new_page\n");
 
     elm_layout_theme_set(lay, "layout", "application", "add_in_object");
     lay = refresh_layout(item);
@@ -211,7 +206,7 @@ status_refresh(void)
   // call once to add a new page button in gengrid
   if(!button_plus)
   {
-    printf("status_refresh -- button_plus\n");
+    ELEGANCE_LOG("button_plus");
 
     item_plus = malloc(sizeof(Elegance_Gengrid_Item));
     item_plus->page = NULL;
@@ -229,7 +224,7 @@ status_refresh(void)
   // add a new item if there is a new page
   if(status_grid->new_page)
   {
-    printf("status_refresh -- new_page\n");
+    ELEGANCE_LOG("new_page");
 
     item = malloc(sizeof(Elegance_Gengrid_Item));
     item->page = actual_page;
@@ -252,9 +247,9 @@ status_refresh(void)
 Evas_Object *
 status_add(Evas_Object *win)
 {
-  Evas_Object *sc, *grid;
+  Evas_Object *grid;
 
-  printf("status_add\n");
+  ELEGANCE_LOG("begin");
 
   // initialize contents' structure
   status_grid = malloc(sizeof(Elegance_Gengrid));

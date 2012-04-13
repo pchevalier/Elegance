@@ -14,4 +14,12 @@
 # include "view.h"
 # include "dnd.h"
 
+#define ELEGANCE_LOG_LEVEL -42
+
+#define ELEGANCE_LOG(fmt, ...)			\
+  EINA_LOG(EINA_LOG_DOMAIN_DEFAULT,		\
+	   ELEGANCE_LOG_LEVEL,			\
+	   fmt,					\
+	   ## __VA_ARGS__)
+
 #endif

@@ -24,7 +24,7 @@ _design_cb_win_del(void        *data __UNUSED__,
 void
 design_win_new(void)
 {
-  Evas_Object *win, *bg, *lay, *o;
+  Evas_Object *win, *bg, *lay;
 
   // create new window base and set title and hook delete request
   design_win = win = elm_win_add(NULL, "main", ELM_WIN_BASIC);

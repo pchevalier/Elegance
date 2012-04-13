@@ -3,8 +3,6 @@
 //--// declarations
 
 //--// globals
-static int cols = 4;
-static int num = 0;
 static Elm_Genlist_Item_Class itc;
 static Elm_Genlist_Item_Class itp;
 static Evas_Object *palette_list;
@@ -97,7 +95,6 @@ gl8_text_get(void *data,
 	     const char *part __UNUSED__)
 {
   char buf[256];
-  Elegance_Tool *d = data;
 
   if (data == container_list)
   {
@@ -123,10 +120,10 @@ static Evas_Object *
 init_palette_genlist(Evas_Object *win)
 {
   Evas_Object *list;
-  Elm_Object_Item *gli = NULL, *git = NULL;
+  Elm_Object_Item *gli = NULL;
   int i = 0;
 
-  printf("init_palette_genlist\n");
+  ELEGANCE_LOG("begin");
 
   itc.item_style     = "default";
   itc.func.text_get  = gl_text_get;
@@ -166,7 +163,7 @@ add_in_container(const Elegance_Tool *list,
   Evas_Object *new, *lay;
   Elegance_Content *content;
 
-  printf("add_in_container\n");
+  ELEGANCE_LOG("begin");
 
   content = malloc(sizeof(Elegance_Content));
   content->name = strdup(list[i].name);
@@ -205,9 +202,8 @@ Evas_Object *
 palette_add(Evas_Object *win)
 {
   Evas_Object *o;
-  int i, x, y;
 
-  printf("palette_add\n");
+  ELEGANCE_LOG("begin");
 
   // init genlist
   palette_list = o = init_palette_genlist(win);
@@ -225,7 +221,7 @@ palette_refresh(void)
   Eina_List *list = elm_genlist_realized_items_get(palette_list);
   int list_size = eina_list_count(list);
 
-  printf("palette_refresh\n");
+  ELEGANCE_LOG("begin");
 
   if((actual_page->hide_contents) &&
      (list_size > sizeof(container_list)/sizeof(container_list[0])+1))
@@ -283,7 +279,7 @@ view_refresh(Evas_Object *icon,
   char *buf;
   int i = 0;
 
-  printf("view_refresh -- %s\n", actual_content->name);
+  ELEGANCE_LOG("begin - actual_content: %s", actual_content->name);
 
   buf = evas_object_data_get(icon, "--dnd_type");
   if (strcmp(actual_content->name, "inwin"))

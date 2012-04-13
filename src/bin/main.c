@@ -7,6 +7,10 @@ elm_main(int argc __UNUSED__,
 {
   Elm_Theme *th;
 
+  // debug mode
+  if (DEBUG)
+    eina_log_level_set(ELEGANCE_LOG_LEVEL);
+
   // set the main theme
   th = elm_theme_default_get();
   elm_theme_overlay_add(th, PACKAGE_DATA_DIR"/themes/elegance.edj");

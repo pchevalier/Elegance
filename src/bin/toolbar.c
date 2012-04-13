@@ -7,17 +7,14 @@
 //--// callbacks
 // callback for new page
 void
-_toolbar_new_page_cb(void *data,
-		     Evas_Object *obj,
-		     void *event_info)
+_toolbar_new_page_cb(void *data __UNUSED__,
+		     Evas_Object *obj __UNUSED__,
+		     void *event_info __UNUSED__)
 {
   Elegance_Page *page;
-  Elegance_Content *content;
-  Elegance_Tool tool = {"special", "special", "special", "special", "special",
-			elm_win_inwin_add, elm_win_inwin_content_set };
-  Evas_Object *lay, *new;
 
-  printf("_toolbar_new_page_cb\n");
+
+  ELEGANCE_LOG("begin");
 
   // clean view and add new item to status's gengrid
   status_grid->new_page = EINA_TRUE;
@@ -42,11 +39,11 @@ _toolbar_new_page_cb(void *data,
 
 // callback to create a new project
 void
-_toolbar_new_project_cb(void *data,
-			Evas_Object *obj,
-			void *event_info)
+_toolbar_new_project_cb(void *data __UNUSED__,
+			Evas_Object *obj __UNUSED__,
+			void *event_info __UNUSED__)
 {
-  printf("new project\n");
+  ELEGANCE_LOG("new project");
 }
 
 //--// public routines
@@ -57,7 +54,7 @@ toolbar_add(Evas_Object *win)
   Evas_Object *tb, *menu;
   Elm_Object_Item *tb_it;
 
-  printf("toolbar_add\n");
+  ELEGANCE_LOG("begin");
 
   // add toolbar to main win
   tb = elm_toolbar_add(win);

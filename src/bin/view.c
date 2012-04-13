@@ -15,7 +15,7 @@ view_reload_child(Elegance_Content *data)
 {
   Evas_Object *new, *lay;
 
-  printf("refresh_childs -- %s\n", data->name);
+  ELEGANCE_LOG("begin - data: %s", data->name);
 
   data->lay = lay = elm_layout_add(design_win);
   elm_layout_theme_set(lay, "layout", "application", "add_in_object");
@@ -58,7 +58,7 @@ view_clean(Eina_List *list)
 
   EINA_LIST_FOREACH(list, contents, content)
   {
-    printf("view_clean - %s\n", content->name);
+    ELEGANCE_LOG("content->name: %s", content->name);
 
     if(content->child)
       view_clean(content->child);
@@ -79,7 +79,7 @@ view_reload(Eina_List *list)
   {
     Evas_Object *lay, *new;
 
-    printf("view_reload -- %s\n", content->name);
+   ELEGANCE_LOG("content->name: %s", content->name);
 
     content->lay = lay = elm_layout_add(design_win);
     evas_object_size_hint_weight_set(lay, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
@@ -137,7 +137,7 @@ view_add(void)
   Elegance_Tool tool = {"special", "special", "special", "special", "special",
 			elm_win_inwin_add, elm_win_inwin_content_set };
 
-  printf("view_add\n");
+  ELEGANCE_LOG("begin");
 
   // new content
   content = malloc(sizeof(Elegance_Content));

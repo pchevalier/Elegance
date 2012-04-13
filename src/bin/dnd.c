@@ -129,7 +129,10 @@ _dnd_handle(Evas_Object *obj, Evas_Coord x, Evas_Coord y)
 }
 
 static void
-_dnd_action(Evas_Object *obj, Dnd_Dir dir, Evas_Coord x, Evas_Coord y)
+_dnd_action(Evas_Object *obj,
+	    Dnd_Dir dir,
+	    Evas_Coord x __UNUSED__,
+	    Evas_Coord y __UNUSED__)
 {
   Evas_Object *dnd_icon = evas_object_data_get(obj, "--dnd_icon");
 
@@ -158,9 +161,8 @@ find_and_refresh_top_actual_content(Eina_List *contents,
 {
   Eina_List *l;
   Elegance_Content *data;
-  Elegance_Content *new = NULL;
 
-  printf("find_and_refresh_top_actual_content\n");
+  ELEGANCE_LOG("begin");
 
   if (!contents) return;
   EINA_LIST_FOREACH(contents, l, data)
@@ -187,7 +189,7 @@ _dnd_finish(Evas_Object *obj, Evas_Coord x, Evas_Coord y)
   Evas_Object *o;
   Evas_Object *dnd_icon = evas_object_data_get(obj, "--dnd_icon");
 
-  printf("_dnd_finish\n");
+  ELEGANCE_LOG("begin");
 
   elm_object_scroll_freeze_pop(obj);
   o = _dnd_target_find(x, y);
@@ -355,7 +357,7 @@ dnd_data_get(Evas_Object *obj)
 void
 dnd_target_register(Evas_Object *obj)
 {
-  printf("dnd_target_register\n");
+  ELEGANCE_LOG("begin");
 
   evas_object_event_callback_add(obj, EVAS_CALLBACK_DEL,
 				 _target_del, NULL);
@@ -365,7 +367,7 @@ dnd_target_register(Evas_Object *obj)
 void
 dnd_target_unregister(Evas_Object *obj)
 {
-  printf("dnd_target_unregister\n");
+  ELEGANCE_LOG("begin");
 
   evas_object_event_callback_del(obj, EVAS_CALLBACK_DEL,
 				 _target_del);

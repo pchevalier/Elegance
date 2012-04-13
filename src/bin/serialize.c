@@ -20,7 +20,7 @@ serialize_print_childs(Elegance_Content *obj2)
 
   EINA_LIST_FOREACH(obj2->child, l3, obj3)
   {
-    printf("        %i Content named: %s - (%p) with %i childs\n",
+    ELEGANCE_LOG("        %i Content named: %s - (%p) with %i childs",
 	   lvl, obj3->name, obj3->obj, eina_list_count(obj3->child));
     if(obj3->child)
     {
@@ -41,7 +41,7 @@ serialize_print_contents(Elegance_Page *obj1)
 
   EINA_LIST_FOREACH(obj1->contents, l2, obj2)
   {
-    printf("        %i Content named: %s - (%p) with %i childs\n",
+    ELEGANCE_LOG("        %i Content named: %s - (%p) with %i childs",
 	   lvl, obj2->name, obj2->obj, eina_list_count(obj2->child));
     if(obj2->child)
     {
@@ -66,24 +66,24 @@ serialize_print(void)
 
   // init lvl
   lvl = 0;
-  printf("\n--------- Project Structure of %s - %i pages ---------\n",
+  ELEGANCE_LOG("--------- Project Structure of %s - %i pages ---------",
 	 actual_project->name,
 	 eina_list_count(actual_project->pages));
   // execute that to all page's project
   EINA_LIST_FOREACH(actual_project->pages, l1, obj1)
   {
-    printf("Page named : %s\nThis page contains :\n", obj1->name);
+    ELEGANCE_LOG("Page named : %s\nThis page contains :", obj1->name);
     // little recursive function for contents
     serialize_print_contents(obj1);
   }
-  printf("*********************************************************\n");
+  ELEGANCE_LOG("*********************************************************");
 }
 
 // init main structure for serialization (see serialize.h)
 void
 serialize_init(void)
 {
-  printf("serialize_init\n");
+  ELEGANCE_LOG("begin");
 
   Elegance_Project *project;
   Elegance_Page *page;
