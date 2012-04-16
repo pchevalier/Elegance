@@ -1,6 +1,15 @@
 #ifndef ELEGANCE_MAIN_H
 # define ELEGANCE_MAIN_H
 
+# ifdef $DEBUG
+#  define ELEGANCE_LOG(msg, ...)					\
+  printf("\033[34m<\033[1;31mELEGANCE\033[34m:\033[33m%s"		\
+	 "\033[34m:\033[33m%d\033[34m>\033[00m " msg"\n",		\
+	  ## __VA_ARGS__)
+# else
+#  define ELEGANCE_LOG(msg, ...)
+# endif /* !DEBUG */
+
 # include <Elementary.h>
 # include "config.h"
 # include "palette.h"
@@ -13,13 +22,5 @@
 # include "tree.h"
 # include "view.h"
 # include "dnd.h"
-
-#define ELEGANCE_LOG_LEVEL -42
-
-#define ELEGANCE_LOG(fmt, ...)			\
-  EINA_LOG(EINA_LOG_DOMAIN_DEFAULT,		\
-	   ELEGANCE_LOG_LEVEL,			\
-	   fmt,					\
-	   ## __VA_ARGS__)
 
 #endif

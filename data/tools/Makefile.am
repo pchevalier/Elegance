@@ -21,6 +21,8 @@ rect-b.png \
 text-b.png \
 bubble-b.png \
 bubble-s.png \
+calendar-b.png \
+calendar-s.png \
 textblock-b.png \
 textblock-s.png
 

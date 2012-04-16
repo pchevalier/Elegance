@@ -16,7 +16,7 @@ static const Elegance_Tool container_list[2] = {
 };
 
 // list for all elm tools
-static const Elegance_Tool elm_list[5] = {
+static const Elegance_Tool elm_list[6] = {
   { "elementary", "icon", "Icon", "icon-s.png", "icon-b.png",
     elm_icon_add, NULL },
   { "elementary", "button", "Button", "button-s.png", "button-b.png",
@@ -27,6 +27,8 @@ static const Elegance_Tool elm_list[5] = {
     elm_video_add, NULL },
   { "elementary", "bubble", "Bubble", "bubble-s.png", "bubble-b.png",
     elm_bubble_add, NULL },
+  { "elementary", "calendar", "Calendar", "calendar-s.png", "calendar-b.png",
+    elm_calendar_add, NULL },
 };
 
 // list for evas object tools
