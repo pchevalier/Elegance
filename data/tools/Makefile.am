@@ -23,6 +23,12 @@ bubble-b.png \
 bubble-s.png \
 calendar-b.png \
 calendar-s.png \
+entry-b.png \
+entry-s.png \
+slider-b.png \
+slider-s.png \
+spinner-b.png \
+spinner-s.png \
 textblock-b.png \
 textblock-s.png
 
