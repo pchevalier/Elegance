@@ -43,16 +43,9 @@ refresh_childs(Elegance_Content *data)
   elm_layout_theme_set(lay, "layout", "application", "add_in_object");
   evas_object_size_hint_weight_set(lay, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
   evas_object_size_hint_align_set(lay, EVAS_HINT_FILL, EVAS_HINT_FILL);
-  if(!strcmp(data->tool.type, "evas"))
-    new = data->tool.function_add(evas_object_evas_get(design_win));
-  else
-    new = data->tool.function_add(design_win);
+  new = data->tool.function_add(design_win);
   elm_object_part_content_set(lay,
 			      "elm.swallow.add_in_object", new);
-  edje_object_color_class_set(lay, "elegance_1",
-			      rand()%256, rand()%256, rand()%256, 30,
-			      0, 0, 0, 0,
-			      0, 0, 0, 0);
   if (data->child)
   {
     Eina_List *l_subchild;
@@ -83,16 +76,9 @@ refresh_layout(Elegance_Gengrid_Item *item)
   {
     Evas_Object *new = NULL;
 
-    if(!strcmp(data->tool.type, "evas"))
-      new = data->tool.function_add(evas_object_evas_get(design_win));
-    else
-      new = data->tool.function_add(design_win);
+    new = data->tool.function_add(design_win);
     elm_object_part_content_set(item->lay,
 				"elm.swallow.add_in_object", new);
-    edje_object_color_class_set(item->lay, "elegance_1",
-				rand()%256, rand()%256, rand()%256, 30,
-				0, 0, 0, 0,
-				0, 0, 0, 0);
     if(!strcmp(data->tool.name, "special"))
     {
       elm_win_inwin_activate(new);

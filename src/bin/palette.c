@@ -37,16 +37,6 @@ static const Elegance_Tool elm_list[9] = {
     elm_spinner_add, NULL },
 };
 
-// list for evas object tools
-static const Elegance_Tool evas_list[3] = {
-  { "evas", "rect", "Rectangle", "rect-s.png", "rect-b.png",
-    evas_object_rectangle_add, NULL },
-  { "evas", "text", "Text", "text-s.png", "text-b.png",
-    evas_object_text_add, NULL },
-  { "evas", "textblock", "Text Block", "textblock-s.png", "textblock-b.png",
-    evas_object_textblock_add, NULL },
-};
-
 //--// callbacks
 // genlist's callback
 static char *
@@ -83,7 +73,7 @@ gl_content_get(void *data,
   return o;
 }
 
-Eina_Bool
+static Eina_Bool
 gl_state_get(void *data __UNUSED__,
 	     Evas_Object *obj __UNUSED__,
 	     const char *part __UNUSED__)
@@ -91,7 +81,7 @@ gl_state_get(void *data __UNUSED__,
    return EINA_FALSE;
 }
 
-void
+static void
 gl_del(void *data __UNUSED__,
 	    Evas_Object *obj __UNUSED__)
 {
@@ -112,11 +102,6 @@ gl8_text_get(void *data,
   if (data == elm_list)
   {
     snprintf(buf, sizeof(buf), "%s", "elementary");
-    return strdup(buf);
-  }
-  if (data == evas_list)
-  {
-    snprintf(buf, sizeof(buf), "%s", "evas");
     return strdup(buf);
   }
 }
@@ -146,7 +131,6 @@ init_palette_genlist(Evas_Object *win)
   itp.func.del       = gl_del;
 
   list = elm_genlist_add(win);
-  evas_object_pointer_mode_set(list, EVAS_OBJECT_POINTER_MODE_NOGRAB);
   evas_object_size_hint_weight_set(list, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
   evas_object_size_hint_align_set(list, EVAS_HINT_FILL, EVAS_HINT_FILL);
   evas_object_show(list);
@@ -184,15 +168,8 @@ add_in_container(const Elegance_Tool *list,
   actual_content->tool.function_pack(actual_content->obj, lay,
 				     NULL, NULL, NULL, NULL);
 
-  if(!strcmp(list[i].type, "evas"))
-    new = list[i].function_add(evas_object_evas_get(design_win));
-  else
-    new = list[i].function_add(design_win);
+  new = list[i].function_add(design_win);
   elm_object_part_content_set(lay, "elm.swallow.add_in_object", new);
-  edje_object_color_class_set(lay, "elegance_1",
-			      rand()%256, rand()%256, rand()%256, 40,
-			      0, 0, 0, 0,
-			      0, 0, 0, 0);
 
   content->obj = new;
   content->lay = lay;
@@ -240,8 +217,7 @@ palette_refresh(void)
     // hide all items exept containers
     EINA_LIST_REVERSE_FOREACH(list, l, it)
     {
-      if (i < sizeof(elm_list)/sizeof(elm_list[0]) +
-	  sizeof(evas_list)/sizeof(evas_list[0]) + 2)
+      if (i < sizeof(elm_list)/sizeof(elm_list[0]) + 1)
 	elm_object_item_del(it);
       i++;
     }
@@ -261,16 +237,6 @@ palette_refresh(void)
       for(i = 0; i < sizeof(elm_list) / sizeof(elm_list[0]); i++)
       {
 	elm_genlist_item_append(palette_list, &itc, &elm_list[i], gli,
-				ELM_GENLIST_ITEM_NONE,
-				NULL, NULL);
-      }
-
-      gli = elm_genlist_item_append(palette_list, &itp, &evas_list, NULL,
-				    ELM_GENLIST_ITEM_GROUP,
-				    NULL, NULL);
-      for(i = 0; i < sizeof(evas_list) / sizeof(evas_list[0]); i++)
-      {
-	elm_genlist_item_append(palette_list, &itc, &evas_list[i], gli,
 				ELM_GENLIST_ITEM_NONE,
 				NULL, NULL);
       }
@@ -296,11 +262,6 @@ view_refresh(Evas_Object *icon,
     {
       if (!strcmp(buf, elm_list[i].name))
 	return (add_in_container(elm_list, i));
-    }
-    for (i = 0; i < sizeof(evas_list) / sizeof(evas_list[0]); i++)
-    {
-      if (!strcmp(buf, evas_list[i].name))
-	return (add_in_container(evas_list, i));
     }
     for (i = 0; i < sizeof(container_list) / sizeof(container_list[0]); i++)
     {
@@ -329,10 +290,6 @@ view_refresh(Evas_Object *icon,
 	new = container_list[i].function_add(design_win);
 	elm_object_part_content_set(lay,
 				    "elm.swallow.add_in_object", new);
-	edje_object_color_class_set(lay, "elegance_1",
-				    rand()%256, rand()%256, rand()%256, 30,
-				    0, 0, 0, 0,
-				    0, 0, 0, 0);
 
 	content->obj = new;
 	content->lay = lay;

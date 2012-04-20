@@ -1,7 +1,21 @@
 #ifndef SERIALIZE_H_
 # define SERIALIZE_H_
 
-// structure of a page's content
+typedef struct  _Elegance_Property Elegance_Property;
+struct		_Elegance_Property
+{
+    char *	*name;
+    int		x;
+    int		y;
+    int		w;
+    int		h;
+    int		r;
+    int		g;
+    int		b;
+    int		a;
+};
+
+// STRUCTURE of a page's content
 typedef struct  _Elegance_Content Elegance_Content;
 struct		_Elegance_Content
 {
@@ -10,6 +24,7 @@ struct		_Elegance_Content
     Evas_Object		*obj; // associated Evas object
     Evas_Object		*lay; // content's layout
     Eina_List		*child; // list of content's childs
+    Elegance_Property	*prop; // object's properties
 };
 
 // structure of a project's page

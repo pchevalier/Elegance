@@ -21,16 +21,9 @@ view_reload_child(Elegance_Content *data)
   elm_layout_theme_set(lay, "layout", "application", "add_in_object");
   evas_object_size_hint_weight_set(lay, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
   evas_object_size_hint_align_set(lay, EVAS_HINT_FILL, EVAS_HINT_FILL);
-  if(!strcmp(data->tool.type, "evas"))
-    data->obj = new = data->tool.function_add(evas_object_evas_get(design_win));
-  else
-    data->obj = new = data->tool.function_add(design_win);
+  data->obj = new = data->tool.function_add(design_win);
   elm_object_part_content_set(lay,
 			      "elm.swallow.add_in_object", new);
-  edje_object_color_class_set(lay, "elegance_1",
-			      rand()%256, rand()%256, rand()%256, 30,
-			      0, 0, 0, 0,
-			      0, 0, 0, 0);
   if (data->child)
   {
     Eina_List *l_subchild;
@@ -84,12 +77,7 @@ view_reload(Eina_List *list)
     content->lay = lay = elm_layout_add(design_win);
     evas_object_size_hint_weight_set(lay, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
     elm_layout_theme_set(lay, "layout", "application", "add_in_object");
-
-    if(!strcmp(content->tool.type, "evas"))
-      content->obj = new = content->tool.function_add(
-	evas_object_evas_get(design_win));
-    else
-      content->obj = new = content->tool.function_add(design_win);
+    content->obj = new = content->tool.function_add(design_win);
 
     // special part for inwin
     if (!strcmp(content->name, "inwin"))
@@ -103,10 +91,6 @@ view_reload(Eina_List *list)
       dnd_target_register(view_layout);
     }
     elm_object_part_content_set(lay, "elm.swallow.add_in_object", new);
-    edje_object_color_class_set(lay, "elegance_1",
-				rand()%256, rand()%256, rand()%256, 40,
-				0, 0, 0, 0,
-				0, 0, 0, 0);
 
     evas_object_show(lay);
     evas_object_show(new);
@@ -134,8 +118,11 @@ view_add(void)
 {
   Evas_Object *lay, *inwin;
   Elegance_Content *content;
+  Elegance_Property *prop;
   Elegance_Tool tool = {"special", "special", "special", "special", "special",
 			elm_win_inwin_add, elm_win_inwin_content_set };
+
+  Evas_Coord ox, oy, ow, oh;
 
   ELEGANCE_LOG("begin");
 
@@ -156,6 +143,15 @@ view_add(void)
   elm_object_style_set(inwin, "elegance");
   elm_win_inwin_activate(inwin);
 
+  // register layout for drag&drop
+  dnd_target_register(view_layout);
+  evas_object_show(lay);
+  evas_object_show(inwin);
+
+  // fill content's properties
+  prop = malloc(sizeof(Elegance_Property));
+  prop->name = strdup("inwin");
+
   // fill content's informations and add to current page
   content->obj = inwin;
   content->lay = lay;
@@ -165,11 +161,6 @@ view_add(void)
 					   content);
   // focus this content
   actual_content = content;
-
-  // register layout for drag&drop
-  dnd_target_register(view_layout);
-  evas_object_show(lay);
-  evas_object_show(inwin);
 
   // refresh the status bar
   status_refresh();
