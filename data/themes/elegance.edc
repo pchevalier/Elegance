@@ -127,7 +127,7 @@ collections {
                // FIXME 48x96 should be the native pixel design, right now
                // its 80x160. fix int he artwork later
                aspect: 0.5 0.5;
-               max: 50 100;
+               max: 48 96;
                image.normal: "flip_base.png";
             }
          }
