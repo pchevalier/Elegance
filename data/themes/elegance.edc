@@ -13,7 +13,7 @@ collections {
    color_classes {
       color_class {
          name:  "elegance_1";
-         color: 128 128 128 80;
+         color: 80 0 80 80;
          color2: 0 0 0 0;
          color3: 0 0 0 0;
       }
@@ -124,8 +124,6 @@ collections {
             description { state: "default" 0.0;
                rel1.offset: 4 4;
                rel2.offset: -5 -5;
-               // FIXME 48x96 should be the native pixel design, right now
-               // its 80x160. fix int he artwork later
                aspect: 0.5 0.5;
                max: 48 96;
                image.normal: "flip_base.png";
@@ -641,7 +639,7 @@ collections {
             }
             description { state: "visible" 0.0;
                inherit: "default" 1.0;
-               color: 56 56 56 0;
+               color: 56 56 56 255;
             }
          }
          part { name: "shad";
@@ -695,7 +693,6 @@ collections {
          }
       }
    }
-
 
    // icons' declarations
    group {
@@ -757,8 +754,8 @@ collections {
    // special theme for add-in object
    group { name: "elm/layout/application/add_in_object";
       parts {
-         part { name: "bg.add_in_object"; type: RECT;
-            pointer_mode: NOGRAB;
+         part { name: "elm.swallow.fg"; type: RECT;
+            mouse_events: 1;
             description { state: "default" 0.0;
                color_class: "elegance_1";
                rel1 {
