@@ -46,6 +46,7 @@ refresh_childs(Elegance_Content *data)
   new = data->tool.function_add(design_win);
   elm_object_part_content_set(lay,
 			      "elm.swallow.add_in_object", new);
+
   if (data->child)
   {
     Eina_List *l_subchild;
@@ -55,8 +56,12 @@ refresh_childs(Elegance_Content *data)
     EINA_LIST_FOREACH(data->child, l_subchild, data_subchild)
     {
       lay_sub = refresh_childs(data_subchild);
+
       data->tool.function_pack(new, lay_sub,
-			       NULL, NULL, NULL, NULL);
+			       data_subchild->prop->row,
+			       data_subchild->prop->col,
+			       data_subchild->prop->rowspan,
+			       data_subchild->prop->colspan);
     }
   }
   evas_object_show(lay);
@@ -79,7 +84,7 @@ refresh_layout(Elegance_Gengrid_Item *item)
     new = data->tool.function_add(design_win);
     elm_object_part_content_set(item->lay,
 				"elm.swallow.add_in_object", new);
-    if(!strcmp(data->tool.name, "special"))
+    if(!strcmp(data->name, "inwin"))
     {
       elm_win_inwin_activate(new);
       elm_object_style_set(new, "elegance");
@@ -95,7 +100,10 @@ refresh_layout(Elegance_Gengrid_Item *item)
       {
 	lay = refresh_childs(data_subchild);
       	data->tool.function_pack(new, lay,
-      				 NULL, NULL, NULL, NULL);
+      				 data_subchild->prop->row,
+				 data_subchild->prop->col,
+				 data_subchild->prop->rowspan,
+				 data_subchild->prop->colspan);
       }
     }
   }

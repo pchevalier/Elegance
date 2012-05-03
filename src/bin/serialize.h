@@ -4,15 +4,15 @@
 typedef struct  _Elegance_Property Elegance_Property;
 struct		_Elegance_Property
 {
-    char *	*name;
+    char 	*name;
     int		x;
     int		y;
     int		w;
     int		h;
-    int		r;
-    int		g;
-    int		b;
-    int		a;
+    int		row;
+    int		col;
+    int		rowspan;
+    int		colspan;
 };
 
 // STRUCTURE of a page's content

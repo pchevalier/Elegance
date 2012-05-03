@@ -34,7 +34,10 @@ view_reload_child(Elegance_Content *data)
     {
       lay_sub = refresh_childs(data_subchild);
       data->tool.function_pack(new, lay_sub,
-			       NULL, NULL, NULL, NULL);
+			       data_subchild->prop->row,
+			       data_subchild->prop->col,
+			       data_subchild->prop->rowspan,
+			       data_subchild->prop->colspan);
     }
   }
   evas_object_show(lay);
@@ -106,7 +109,10 @@ view_reload(Eina_List *list)
       {
 	sublay = view_reload_child(data_subchild);
 	content->tool.function_pack(new, sublay,
-				    NULL, NULL, NULL, NULL);
+				    actual_content->prop->row,
+				    actual_content->prop->col,
+				    actual_content->prop->rowspan,
+				    actual_content->prop->colspan);
       }
     }
   }
@@ -151,12 +157,21 @@ view_add(void)
   // fill content's properties
   prop = malloc(sizeof(Elegance_Property));
   prop->name = strdup("inwin");
+  prop->x = 0;
+  prop->y = 0;
+  prop->w = 800;
+  prop->h = 600;
+  prop->row = 0;
+  prop->col = 0;
+  prop->rowspan = 1;
+  prop->colspan = 1;
 
   // fill content's informations and add to current page
   content->obj = inwin;
   content->lay = lay;
   content->tool = tool;
   content->child = NULL;
+  content->prop = prop;
   actual_page->contents = eina_list_append(actual_page->contents,
 					   content);
   // focus this content

@@ -4,7 +4,7 @@
 // typedef of adding function
 typedef Evas_Object *(*f_add)(void *parent);
 typedef void (*f_pack)(void *object, void *subobj,
-		       void *x, void *y, void *w, void *h);
+		       int x, int y, int w, int h);
 
 // set a special structure for tool
 typedef struct  _Elegance_Tool Elegance_Tool;

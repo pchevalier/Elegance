@@ -154,6 +154,7 @@ add_in_container(const Elegance_Tool *list,
 {
   Evas_Object *new, *lay;
   Elegance_Content *content;
+  Elegance_Property *prop;
 
   ELEGANCE_LOG("begin");
 
@@ -161,20 +162,41 @@ add_in_container(const Elegance_Tool *list,
   content->name = strdup(list[i].name);
 
   lay = elm_layout_add(design_win);
+  elm_layout_theme_set(lay, "layout", "application", "add_in_object");
   evas_object_size_hint_weight_set(lay, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
   evas_object_size_hint_align_set(lay, EVAS_HINT_FILL, EVAS_HINT_FILL);
-  elm_layout_theme_set(lay, "layout", "application", "add_in_object");
-
   actual_content->tool.function_pack(actual_content->obj, lay,
-				     NULL, NULL, NULL, NULL);
+				     actual_content->prop->row,
+				     actual_content->prop->col,
+				     actual_content->prop->rowspan,
+				     actual_content->prop->colspan);
 
   new = list[i].function_add(design_win);
   elm_object_part_content_set(lay, "elm.swallow.add_in_object", new);
+
+  prop = malloc(sizeof(Elegance_Property));
+  prop->name = strdup("inwin");
+  prop->x = 0;
+  prop->y = 0;
+  prop->w = 800;
+  prop->h = 600;
+  prop->row = actual_content->prop->row;
+  prop->col = actual_content->prop->col;
+  prop->rowspan = 1;
+  prop->colspan = 1;
+
+  actual_content->prop->row++;
+  if (actual_content->prop->row >= 4)
+  {
+    actual_content->prop->row = 0;
+    actual_content->prop->col++;
+  }
 
   content->obj = new;
   content->lay = lay;
   content->child = NULL;
   content->tool = list[i];
+  content->prop = prop;
   actual_content->child = eina_list_append(actual_content->child, content);
 
   evas_object_show(lay);
@@ -276,6 +298,7 @@ view_refresh(Evas_Object *icon,
       if (!strcmp(buf, container_list[i].name))
       {
 	Evas_Object *new, *lay;
+	Elegance_Property *prop;
 	Elegance_Content *content;
 
 	content = malloc(sizeof(Elegance_Content));
@@ -285,16 +308,33 @@ view_refresh(Evas_Object *icon,
 	evas_object_size_hint_weight_set(lay, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 	elm_layout_theme_set(lay, "layout", "application", "add_in_object");
 	actual_content->tool.function_pack(actual_content->obj, lay,
-					   NULL, NULL, NULL, NULL);
+					   actual_content->prop->row,
+					   actual_content->prop->col,
+					   actual_content->prop->rowspan,
+					   actual_content->prop->colspan);
 
 	new = container_list[i].function_add(design_win);
 	elm_object_part_content_set(lay,
 				    "elm.swallow.add_in_object", new);
 
+	prop = malloc(sizeof(Elegance_Property));
+	prop->name = buf;
+	prop->x = 0;
+	prop->y = 0;
+	prop->w = 800;
+	prop->h = 600;
+	prop->row = actual_content->prop->row;
+	prop->col = actual_content->prop->col;
+	prop->rowspan = 1;
+	prop->colspan = 1;
+
+	actual_content->prop->row++;
+
 	content->obj = new;
 	content->lay = lay;
 	content->tool = container_list[i];
 	content->child = NULL;
+	content->prop = prop;
 	actual_content->child = eina_list_append(actual_content->child,
 						 content);
 	actual_content = content;
