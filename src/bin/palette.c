@@ -185,7 +185,9 @@ add_in_container(const Elegance_Tool *list,
   prop->rowspan = 1;
   prop->colspan = 1;
 
-  actual_content->prop->row++;
+  if (!strcmp(actual_content->name, "table"))
+      actual_content->prop->row++;
+
   if (actual_content->prop->row >= 4)
   {
     actual_content->prop->row = 0;
@@ -328,7 +330,8 @@ view_refresh(Evas_Object *icon,
 	prop->rowspan = 1;
 	prop->colspan = 1;
 
-	actual_content->prop->row++;
+	if (!strcmp(buf, "table"))
+	  actual_content->prop->row++;
 
 	content->obj = new;
 	content->lay = lay;
