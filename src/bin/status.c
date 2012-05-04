@@ -88,8 +88,9 @@ refresh_layout(Elegance_Gengrid_Item *item)
 				"elm.swallow.add_in_object", new);
     if(!strcmp(data->name, "inwin"))
     {
-      elm_win_inwin_activate(new);
       elm_object_style_set(new, "elegance");
+      elm_win_inwin_activate(new);
+      evas_object_show(new);
     }
 
     if(data->child)

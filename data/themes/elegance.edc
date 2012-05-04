@@ -13,7 +13,7 @@ collections {
    color_classes {
       color_class {
          name:  "elegance_1";
-         color: 56 0 0 80;
+         color:  0 0 0 100;
          color2: 0 0 0 0;
          color3: 0 0 0 0;
       }
@@ -639,7 +639,7 @@ collections {
             }
             description { state: "visible" 0.0;
                inherit: "default" 1.0;
-               color: 56 0 56 80;
+               color: 190 190 190 255;
             }
          }
          part { name: "shad";
@@ -754,7 +754,7 @@ collections {
    // special theme for add-in object
    group { name: "elm/layout/application/add_in_object";
       parts {
-         part { name: "elm.swallow.fg"; type: RECT;
+         part { name: "fg"; type: RECT;
             mouse_events: 1;
             description { state: "default" 0.0;
                color_class: "elegance_1";

@@ -11,7 +11,6 @@ elm_main(int argc __UNUSED__,
 
   // define my own domain
 # ifdef DEBUG
-  printf("debug\n");
   elegance_log_dom = eina_log_domain_register("elegance",
 					      EINA_COLOR_RED);
   eina_log_domain_level_set("elegance", EINA_LOG_LEVEL_DBG);
