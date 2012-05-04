@@ -20,8 +20,9 @@ serialize_print_childs(Elegance_Content *obj2)
 
   EINA_LIST_FOREACH(obj2->child, l3, obj3)
   {
-    ELEGANCE_LOG("        %i Content named: %s - (%p) with %i childs",
-	   lvl, obj3->name, obj3->obj, eina_list_count(obj3->child));
+    ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+		 "        %i Content named: %s - (%p) with %i childs",
+		 lvl, obj3->name, obj3->obj, eina_list_count(obj3->child));
     if(obj3->child)
     {
       lvl++;
@@ -41,8 +42,9 @@ serialize_print_contents(Elegance_Page *obj1)
 
   EINA_LIST_FOREACH(obj1->contents, l2, obj2)
   {
-    ELEGANCE_LOG("        %i Content named: %s - (%p) with %i childs",
-	   lvl, obj2->name, obj2->obj, eina_list_count(obj2->child));
+    ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+		 "        %i Content named: %s - (%p) with %i childs",
+		 lvl, obj2->name, obj2->obj, eina_list_count(obj2->child));
     if(obj2->child)
     {
       lvl++;
@@ -66,24 +68,28 @@ serialize_print(void)
 
   // init lvl
   lvl = 0;
-  ELEGANCE_LOG("--------- Project Structure of %s - %i pages ---------",
-	 actual_project->name,
-	 eina_list_count(actual_project->pages));
+  ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+	       "--------- Project Structure of %s - %i pages ---------",
+	       actual_project->name,
+	       eina_list_count(actual_project->pages));
   // execute that to all page's project
   EINA_LIST_FOREACH(actual_project->pages, l1, obj1)
   {
-    ELEGANCE_LOG("Page named : %s\nThis page contains :", obj1->name);
+    ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+		 "Page named : %s\nThis page contains :", obj1->name);
     // little recursive function for contents
     serialize_print_contents(obj1);
   }
-  ELEGANCE_LOG("*********************************************************");
+  ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+	       "*********************************************************");
 }
 
 // init main structure for serialization (see serialize.h)
 void
 serialize_init(void)
 {
-  ELEGANCE_LOG("begin");
+  ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+	       "begin");
 
   Elegance_Project *project;
   Elegance_Page *page;

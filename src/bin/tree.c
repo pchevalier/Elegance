@@ -75,7 +75,8 @@ tree_add(Evas_Object *win)
   Elegance_Tool tool_test = {"special", "special", "special", "special", "special",
 			     elm_win_inwin_add, elm_win_inwin_content_set };
 
-  ELEGANCE_LOG("begin");
+  ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+	       "begin");
 
   itc.item_style     = "default";
   itc.func.text_get  = gl_text_get;

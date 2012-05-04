@@ -63,7 +63,7 @@ AC_SUBST([debug])
 if test "x${debug}" = "xtrue" ; then
    CFLAGS="$CFLAGS -Wall -Wextra -Werror=unused-variable -Winit-self -g -ggdb -DDEBUG $EFL_CFLAGS"
 else
-   CFLAGS="$CFLAGS -DDEBUG $EFL_CFLAGS"
+   CFLAGS="$CFLAGS $EFL_CFLAGS"
 fi
 
 AC_OUTPUT

@@ -37,7 +37,8 @@ refresh_childs(Elegance_Content *data)
 {
   Evas_Object *new, *lay;
 
-  ELEGANCE_LOG("begin - data->name: %s", data->name);
+  ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+	       "begin - data->name: %s", data->name);
 
   lay = elm_layout_add(design_win);
   elm_layout_theme_set(lay, "layout", "application", "add_in_object");
@@ -75,7 +76,8 @@ refresh_layout(Elegance_Gengrid_Item *item)
   Eina_List *l;
   Elegance_Content *data;
 
-  ELEGANCE_LOG("begin");
+  ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+	       "begin");
 
   EINA_LIST_FOREACH(item->page->contents, l, data)
   {
@@ -117,7 +119,8 @@ _call_new_page_cb(void *data __UNUSED__,
 		  Evas_Object *obj __UNUSED__,
 		  void *event_info __UNUSED__)
 {
-   ELEGANCE_LOG("begin");
+  ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+	       "begin");
 
   _toolbar_new_page_cb(NULL, NULL, NULL);
 }
@@ -131,7 +134,8 @@ _call_reload_cb(void *data __UNUSED__,
 {
   Elegance_Gengrid_Item *item = data;
 
-  ELEGANCE_LOG("begin");
+  ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+	       "begin");
 
   view_clean(actual_page->contents);
   actual_page = item->page;
@@ -152,7 +156,8 @@ _grid_content_get(void        *data,
   {
     Evas_Object *lay;
 
-    ELEGANCE_LOG("begin");
+    ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+		 "begin");
 
     lay = elm_layout_add(design_win);
     evas_object_size_hint_weight_set(lay, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
@@ -200,7 +205,8 @@ status_refresh(void)
   // call once to add a new page button in gengrid
   if(!button_plus)
   {
-    ELEGANCE_LOG("button_plus");
+    ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+		 "button_plus");
 
     item_plus = malloc(sizeof(Elegance_Gengrid_Item));
     item_plus->page = NULL;
@@ -218,7 +224,8 @@ status_refresh(void)
   // add a new item if there is a new page
   if(status_grid->new_page)
   {
-    ELEGANCE_LOG("new_page");
+    ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+		 "new_page");
 
     item = malloc(sizeof(Elegance_Gengrid_Item));
     item->page = actual_page;
@@ -243,7 +250,8 @@ status_add(Evas_Object *win)
 {
   Evas_Object *grid;
 
-  ELEGANCE_LOG("begin");
+  ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+	       "begin");
 
   // initialize contents' structure
   status_grid = malloc(sizeof(Elegance_Gengrid));

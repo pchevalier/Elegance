@@ -14,7 +14,8 @@ _toolbar_new_page_cb(void *data __UNUSED__,
   Elegance_Page *page;
 
 
-  ELEGANCE_LOG("begin");
+  ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+	       "begin");
 
   // clean view and add new item to status's gengrid
   status_grid->new_page = EINA_TRUE;
@@ -43,7 +44,8 @@ _toolbar_new_project_cb(void *data __UNUSED__,
 			Evas_Object *obj __UNUSED__,
 			void *event_info __UNUSED__)
 {
-  ELEGANCE_LOG("new project");
+  ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+	       "new project");
 }
 
 //--// public routines
@@ -54,7 +56,8 @@ toolbar_add(Evas_Object *win)
   Evas_Object *tb, *menu;
   Elm_Object_Item *tb_it;
 
-  ELEGANCE_LOG("begin");
+  ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+	       "begin");
 
   // add toolbar to main win
   tb = elm_toolbar_add(win);

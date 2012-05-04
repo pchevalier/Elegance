@@ -116,7 +116,8 @@ init_palette_genlist(Evas_Object *win)
   Elm_Object_Item *gli = NULL;
   int i = 0;
 
-  ELEGANCE_LOG("begin");
+  ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+	       "begin");
 
   itc.item_style     = "default";
   itc.func.text_get  = gl_text_get;
@@ -156,7 +157,8 @@ add_in_container(const Elegance_Tool *list,
   Elegance_Content *content;
   Elegance_Property *prop;
 
-  ELEGANCE_LOG("begin");
+  ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+	       "begin");
 
   content = malloc(sizeof(Elegance_Content));
   content->name = strdup(list[i].name);
@@ -212,7 +214,8 @@ palette_add(Evas_Object *win)
 {
   Evas_Object *o;
 
-  ELEGANCE_LOG("begin");
+  ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+	       "begin");
 
   // init genlist
   palette_list = o = init_palette_genlist(win);
@@ -230,7 +233,8 @@ palette_refresh(void)
   Eina_List *list = elm_genlist_realized_items_get(palette_list);
   int list_size = eina_list_count(list);
 
-  ELEGANCE_LOG("begin");
+  ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+	       "begin");
 
   if((actual_page->hide_contents) &&
      (list_size > sizeof(container_list)/sizeof(container_list[0])+1))
@@ -277,7 +281,8 @@ view_refresh(Evas_Object *icon,
   char *buf;
   int i = 0;
 
-  ELEGANCE_LOG("begin - actual_content: %s", actual_content->name);
+  ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+	       "begin - actual_content: %s", actual_content->name);
 
   buf = evas_object_data_get(icon, "--dnd_type");
   if (strcmp(actual_content->name, "inwin"))
