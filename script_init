@@ -1,3 +1,27 @@
 #!/bin/bash
 
-autoreconf -vif && ./configure && make
+OPT=""
+FLAGS=""
+
+while getopts "dhj" optname
+do
+    case $optname in
+        j)
+	    FLAGS="-j"
+	    ;;
+	d)
+            OPT="--enable-debug"
+            ;;
+	h|?)
+	    echo "Please, run this script like that:"
+	    echo "        ./script_init -[OPTIONS]"
+	    echo
+	    echo "Available options:"
+	    echo "        d --> activate debug mode"
+	    echo "        j --> activate -j option for make command"
+	    exit 1
+	    ;;
+    esac
+done
+
+autoreconf -vif && ./configure $OPT && make $FLAGS
