@@ -33,7 +33,7 @@ view_reload_child(Elegance_Content *data)
 
     EINA_LIST_FOREACH(data->child, l_subchild, data_subchild)
     {
-      lay_sub = refresh_childs(data_subchild);
+      lay_sub = view_reload_child(data_subchild);
       data->tool.function_pack(new, lay_sub,
 			       data_subchild->prop->row,
 			       data_subchild->prop->col,
@@ -41,6 +41,8 @@ view_reload_child(Elegance_Content *data)
 			       data_subchild->prop->colspan);
     }
   }
+  evas_object_event_callback_add(new, EVAS_CALLBACK_MOUSE_DOWN,
+				 _show_its_properties_cb, data);
   evas_object_show(lay);
   return lay;
 }
@@ -118,6 +120,8 @@ view_reload(Eina_List *list)
 				    actual_content->prop->colspan);
       }
     }
+    evas_object_event_callback_add(new, EVAS_CALLBACK_MOUSE_DOWN,
+				   _show_its_properties_cb, content);
   }
 }
 
@@ -176,6 +180,10 @@ view_add(void)
   content->prop = prop;
   actual_page->contents = eina_list_append(actual_page->contents,
 					   content);
+
+  evas_object_event_callback_add(inwin, EVAS_CALLBACK_MOUSE_DOWN,
+				 _show_its_properties_cb, content);
+
   // focus this content
   actual_content = content;
 

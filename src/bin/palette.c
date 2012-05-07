@@ -203,6 +203,9 @@ add_in_container(const Elegance_Tool *list,
   content->prop = prop;
   actual_content->child = eina_list_append(actual_content->child, content);
 
+  evas_object_event_callback_add(new, EVAS_CALLBACK_MOUSE_DOWN,
+				 _show_its_properties_cb, content);
+
   evas_object_show(lay);
   evas_object_show(new);
 }
@@ -347,6 +350,9 @@ view_refresh(Evas_Object *icon,
 						 content);
 	actual_content = content;
 	actual_page->hide_contents = EINA_FALSE;
+
+	evas_object_event_callback_add(new, EVAS_CALLBACK_MOUSE_DOWN,
+				       _show_its_properties_cb, content);
 
 	evas_object_show(lay);
 	evas_object_show(new);

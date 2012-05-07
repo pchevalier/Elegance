@@ -19,6 +19,7 @@ _toolbar_new_page_cb(void *data __UNUSED__,
 
   // clean view and add new item to status's gengrid
   status_grid->new_page = EINA_TRUE;
+  popup_on = EINA_FALSE;
   view_clean(actual_page->contents);
 
   // add a new page to actual_project
