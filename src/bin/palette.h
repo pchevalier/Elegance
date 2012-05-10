@@ -21,6 +21,6 @@ struct		_Elegance_Tool
 
 Evas_Object *palette_add(Evas_Object *win);
 void palette_refresh(void);
-void view_refresh(Evas_Object *icon, Evas_Coord x, Evas_Coord y);
+void view_refresh(Evas_Object *icon);
 
 #endif

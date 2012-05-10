@@ -1,21 +1,15 @@
 #ifndef SERIALIZE_H_
 # define SERIALIZE_H_
 
+// structure of a property's content
 typedef struct  _Elegance_Property Elegance_Property;
 struct		_Elegance_Property
 {
-    char 	*name;
-    int		x;
-    int		y;
-    int		w;
-    int		h;
-    int		row;
-    int		col;
-    int		rowspan;
-    int		colspan;
+    const char	*name;
+    const char	*data;
 };
 
-// STRUCTURE of a page's content
+// structure of a page's content
 typedef struct  _Elegance_Content Elegance_Content;
 struct		_Elegance_Content
 {
@@ -24,7 +18,7 @@ struct		_Elegance_Content
     Evas_Object		*obj; // associated Evas object
     Evas_Object		*lay; // content's layout
     Eina_List		*child; // list of content's childs
-    Elegance_Property	*prop; // object's properties
+    Eina_Hash		*prop; // object's properties
 };
 
 // structure of a project's page
@@ -50,5 +44,6 @@ extern Elegance_Content *actual_content; // actual select content
 
 void serialize_init(void);
 void serialize_print(void);
+void hash_table_data_free_cb(void *data);
 
 #endif

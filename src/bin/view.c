@@ -35,10 +35,14 @@ view_reload_child(Elegance_Content *data)
     {
       lay_sub = view_reload_child(data_subchild);
       data->tool.function_pack(new, lay_sub,
-			       data_subchild->prop->row,
-			       data_subchild->prop->col,
-			       data_subchild->prop->rowspan,
-			       data_subchild->prop->colspan);
+			       atoi(eina_hash_find(data_subchild->prop,
+						   "row")),
+			       atoi(eina_hash_find(data_subchild->prop,
+						   "col")),
+			       atoi(eina_hash_find(data_subchild->prop,
+						   "rowspan")),
+			       atoi(eina_hash_find(data_subchild->prop,
+						   "colspan")));
     }
   }
   evas_object_event_callback_add(new, EVAS_CALLBACK_MOUSE_DOWN,
@@ -114,10 +118,14 @@ view_reload(Eina_List *list)
       {
 	sublay = view_reload_child(data_subchild);
 	content->tool.function_pack(new, sublay,
-				    actual_content->prop->row,
-				    actual_content->prop->col,
-				    actual_content->prop->rowspan,
-				    actual_content->prop->colspan);
+				    atoi(eina_hash_find(actual_content->prop,
+							"row")),
+				    atoi(eina_hash_find(actual_content->prop,
+							"col")),
+				    atoi(eina_hash_find(actual_content->prop,
+							"rowspan")),
+				    atoi(eina_hash_find(actual_content->prop,
+							"colspan")));
       }
     }
     evas_object_event_callback_add(new, EVAS_CALLBACK_MOUSE_DOWN,
@@ -129,11 +137,22 @@ view_reload(Eina_List *list)
 void
 view_add(void)
 {
+  int i = 0;
   Evas_Object *lay, *inwin;
   Elegance_Content *content;
-  Elegance_Property *prop;
   Elegance_Tool tool = {"special", "special", "special", "special", "special",
 			elm_win_inwin_add, elm_win_inwin_content_set };
+  Elegance_Property prop[] = {
+    { "x", "0" },
+    { "y", "0" },
+    { "w", "800" },
+    { "h", "600" },
+    { "row", "0" },
+    { "col", "0" },
+    { "rowspan", "1" },
+    { "colspan", "1" },
+    { NULL, NULL }
+  };
 
   ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
 	       "begin");
@@ -161,23 +180,25 @@ view_add(void)
   evas_object_show(inwin);
 
   // fill content's properties
-  prop = malloc(sizeof(Elegance_Property));
-  prop->name = strdup("inwin");
-  prop->x = 0;
-  prop->y = 0;
-  prop->w = 800;
-  prop->h = 600;
-  prop->row = 0;
-  prop->col = 0;
-  prop->rowspan = 1;
-  prop->colspan = 1;
+  /* prop->x = 0; */
+  /* prop->y = 0; */
+  /* prop->w = 800; */
+  /* prop->h = 600; */
+  /* prop->row = 0; */
+  /* prop->col = 0; */
+  /* prop->rowspan = 1; */
+  /* prop->colspan = 1; */
+  content->prop = eina_hash_string_superfast_new(hash_table_data_free_cb);
+
+  for (i = 0; prop[i].name != NULL; i++)
+    eina_hash_add(content->prop, prop[i].name,
+		  strdup(prop[i].data));
 
   // fill content's informations and add to current page
   content->obj = inwin;
   content->lay = lay;
   content->tool = tool;
   content->child = NULL;
-  content->prop = prop;
   actual_page->contents = eina_list_append(actual_page->contents,
 					   content);
 

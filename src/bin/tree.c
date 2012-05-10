@@ -34,10 +34,11 @@ _popup_item_cb(void *data,
   if (actual_selected != content)
   {
     elm_genlist_clear(tree_list);
+
     elm_genlist_item_append(tree_list, &itc, content, NULL,
-  			    ELM_GENLIST_ITEM_NONE,
-  			    NULL, NULL);
-    actual_content = content;
+			    ELM_GENLIST_ITEM_NONE,
+			    NULL, NULL);
+    actual_selected = content;
   }
   _dismissed(NULL, obj, NULL);
   popup_on = EINA_FALSE;
@@ -100,36 +101,44 @@ gl_text_get(void *data,
 }
 
 static Evas_Object *
+display_property(Evas_Object *entry,
+		 Elegance_Content *content)
+{
+  Elm_Entry_Filter_Limit_Size filter_limit;
+  Elm_Entry_Filter_Accept_Set filter_accept;
+
+  entry = elm_entry_add(design_win);
+  elm_entry_entry_append(entry, content->tool.icon_small);
+  elm_entry_single_line_set(entry, EINA_TRUE);
+  evas_object_size_hint_weight_set(entry,
+				     EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+  evas_object_size_hint_align_set(entry,
+				  EVAS_HINT_FILL, EVAS_HINT_FILL);
+  filter_limit.max_char_count = 10;
+  filter_accept.accepted = "0123456789";
+  elm_entry_markup_filter_append(entry,
+				 elm_entry_filter_limit_size,
+				 &filter_limit);
+  elm_entry_markup_filter_append(entry,
+				 elm_entry_filter_accept_set,
+				 &filter_accept);
+  return entry;
+}
+
+static Evas_Object *
 gl_content_get(void *data,
 	       Evas_Object *obj __UNUSED__,
 	       const char *part __UNUSED__)
 {
-  Evas_Object *test_entry = NULL;
+  Evas_Object *entry = NULL;
   Elegance_Content *content = data;
 
   if (!strcmp(part, "elm.swallow.end"))
   {
-    Elm_Entry_Filter_Limit_Size filter_limit;
-    Elm_Entry_Filter_Accept_Set filter_accept;
-
-    test_entry = elm_entry_add(design_win);
-    elm_entry_entry_append(test_entry, content->tool.icon_small);
-    elm_entry_single_line_set(test_entry, EINA_TRUE);
-    evas_object_size_hint_weight_set(test_entry,
-				     EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-    evas_object_size_hint_align_set(test_entry,
-				    EVAS_HINT_FILL, EVAS_HINT_FILL);
-    filter_limit.max_char_count = 10;
-    filter_accept.accepted = "0123456789";
-    elm_entry_markup_filter_append(test_entry,
-				   elm_entry_filter_limit_size,
-				   &filter_limit);
-    elm_entry_markup_filter_append(test_entry,
-				   elm_entry_filter_accept_set,
-				   &filter_accept);
+    return display_property(entry, content);
   }
 
-  return test_entry;
+  return entry;
 }
 
 static Eina_Bool

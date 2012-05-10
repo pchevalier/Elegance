@@ -154,8 +154,20 @@ add_in_container(const Elegance_Tool *list,
 		 int i)
 {
   Evas_Object *new, *lay;
+  int row = 0;
+  int j = 0;
   Elegance_Content *content;
-  Elegance_Property *prop;
+  Elegance_Property prop[] = {
+    { "x", "0" },
+    { "y", "0" },
+    { "w", "800" },
+    { "h", "600" },
+    { "row", eina_hash_find(actual_content->prop, "row") },
+    { "col", eina_hash_find(actual_content->prop, "col") },
+    { "rowspan", "1" },
+    { "colspan", "1" },
+    { NULL, NULL }
+  };
 
   ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
 	       "begin");
@@ -163,48 +175,73 @@ add_in_container(const Elegance_Tool *list,
   content = malloc(sizeof(Elegance_Content));
   content->name = strdup(list[i].name);
 
+  content->prop = eina_hash_string_superfast_new(hash_table_data_free_cb);
+
+  for (j = 0; prop[j].name != NULL; j++)
+  {
+    eina_hash_add(content->prop, prop[j].name,
+		  strdup(prop[j].data));
+  }
+
   lay = elm_layout_add(design_win);
   elm_layout_theme_set(lay, "layout", "application", "add_in_object");
   evas_object_size_hint_weight_set(lay, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
   evas_object_size_hint_align_set(lay, EVAS_HINT_FILL, EVAS_HINT_FILL);
   actual_content->tool.function_pack(actual_content->obj, lay,
-				     actual_content->prop->row,
-				     actual_content->prop->col,
-				     actual_content->prop->rowspan,
-				     actual_content->prop->colspan);
+				     atoi(eina_hash_find(actual_content->prop,
+							 "row")),
+				     atoi(eina_hash_find(actual_content->prop,
+							 "col")),
+				     atoi(eina_hash_find(actual_content->prop,
+							 "rowspan")),
+				     atoi(eina_hash_find(actual_content->prop,
+							 "colspan")));
 
   new = list[i].function_add(design_win);
   elm_object_part_content_set(lay, "elm.swallow.add_in_object", new);
 
-  prop = malloc(sizeof(Elegance_Property));
-  prop->name = strdup("inwin");
-  prop->x = 0;
-  prop->y = 0;
-  prop->w = 800;
-  prop->h = 600;
-  prop->row = actual_content->prop->row;
-  prop->col = actual_content->prop->col;
-  prop->rowspan = 1;
-  prop->colspan = 1;
-
+  row = atoi(eina_hash_find(actual_content->prop, "row"));
   if (!strcmp(actual_content->name, "table"))
-      actual_content->prop->row++;
-
-  if (actual_content->prop->row >= 4)
   {
-    actual_content->prop->row = 0;
-    actual_content->prop->col++;
+    char *old;
+    char buf[256];
+
+    snprintf(buf, sizeof(buf), "%i", ++row);
+    old = eina_hash_set(actual_content->prop, "row", strdup(buf));
+    free(old);
+  }
+
+  if (row > 3)
+  {
+    char *old1, *old2;
+    int col;
+    char buf[256];
+
+    snprintf(buf, sizeof(buf), "%i", 0);
+    old1 = eina_hash_set(actual_content->prop, "row", strdup(buf));
+    free(old1);
+
+    col = atoi(eina_hash_find(actual_content->prop, "col"));
+    snprintf(buf, sizeof(buf), "%i", col + 1);
+    old2 = eina_hash_set(actual_content->prop, "col", strdup(buf));
+    free(old2);
   }
 
   content->obj = new;
   content->lay = lay;
   content->child = NULL;
   content->tool = list[i];
-  content->prop = prop;
   actual_content->child = eina_list_append(actual_content->child, content);
 
   evas_object_event_callback_add(new, EVAS_CALLBACK_MOUSE_DOWN,
 				 _show_its_properties_cb, content);
+
+  if (list == container_list)
+  {
+    actual_content = content;
+    actual_page->hide_contents = EINA_FALSE;
+    palette_refresh();
+  }
 
   evas_object_show(lay);
   evas_object_show(new);
@@ -277,88 +314,23 @@ palette_refresh(void)
 
 // usefull function that detect if a container is added into the inwin (view)
 void
-view_refresh(Evas_Object *icon,
-	     Evas_Coord x,
-	     Evas_Coord y)
+view_refresh(Evas_Object *icon)
 {
   char *buf;
   int i = 0;
 
   ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
-	       "begin - actual_content: %s", actual_content->name);
+	       "begin");
 
   buf = evas_object_data_get(icon, "--dnd_type");
-  if (strcmp(actual_content->name, "inwin"))
+  for (i = 0; i < sizeof(elm_list) / sizeof(elm_list[0]); i++)
   {
-    for (i = 0; i < sizeof(elm_list) / sizeof(elm_list[0]); i++)
-    {
-      if (!strcmp(buf, elm_list[i].name))
-	return (add_in_container(elm_list, i));
-    }
-    for (i = 0; i < sizeof(container_list) / sizeof(container_list[0]); i++)
-    {
-      if (!strcmp(buf, container_list[i].name))
-	return (add_in_container(container_list, i));
-    }
+    if (!strcmp(buf, elm_list[i].name))
+      return (add_in_container(elm_list, i));
   }
-  else
+  for (i = 0; i < sizeof(container_list) / sizeof(container_list[0]); i++)
   {
-    for (i = 0; i < sizeof(container_list) / sizeof(container_list[0]); i++)
-    {
-      if (!strcmp(buf, container_list[i].name))
-      {
-	Evas_Object *new, *lay;
-	Elegance_Property *prop;
-	Elegance_Content *content;
-
-	content = malloc(sizeof(Elegance_Content));
-	content->name = buf;
-
-	lay = elm_layout_add(design_win);
-	evas_object_size_hint_weight_set(lay, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-	elm_layout_theme_set(lay, "layout", "application", "add_in_object");
-	actual_content->tool.function_pack(actual_content->obj, lay,
-					   actual_content->prop->row,
-					   actual_content->prop->col,
-					   actual_content->prop->rowspan,
-					   actual_content->prop->colspan);
-
-	new = container_list[i].function_add(design_win);
-	elm_object_part_content_set(lay,
-				    "elm.swallow.add_in_object", new);
-
-	prop = malloc(sizeof(Elegance_Property));
-	prop->name = buf;
-	prop->x = 0;
-	prop->y = 0;
-	prop->w = 800;
-	prop->h = 600;
-	prop->row = actual_content->prop->row;
-	prop->col = actual_content->prop->col;
-	prop->rowspan = 1;
-	prop->colspan = 1;
-
-	if (!strcmp(buf, "table"))
-	  actual_content->prop->row++;
-
-	content->obj = new;
-	content->lay = lay;
-	content->tool = container_list[i];
-	content->child = NULL;
-	content->prop = prop;
-	actual_content->child = eina_list_append(actual_content->child,
-						 content);
-	actual_content = content;
-	actual_page->hide_contents = EINA_FALSE;
-
-	evas_object_event_callback_add(new, EVAS_CALLBACK_MOUSE_DOWN,
-				       _show_its_properties_cb, content);
-
-	evas_object_show(lay);
-	evas_object_show(new);
-
-	palette_refresh();
-      }
-    }
+    if (!strcmp(buf, container_list[i].name))
+      return (add_in_container(container_list, i));
   }
 }

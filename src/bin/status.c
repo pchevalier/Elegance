@@ -59,10 +59,14 @@ refresh_childs(Elegance_Content *data)
       lay_sub = refresh_childs(data_subchild);
 
       data->tool.function_pack(new, lay_sub,
-			       data_subchild->prop->row,
-			       data_subchild->prop->col,
-			       data_subchild->prop->rowspan,
-			       data_subchild->prop->colspan);
+			       atoi(eina_hash_find(data_subchild->prop,
+						   "row")),
+			       atoi(eina_hash_find(data_subchild->prop,
+						   "col")),
+			       atoi(eina_hash_find(data_subchild->prop,
+						   "rowspan")),
+			       atoi(eina_hash_find(data_subchild->prop,
+						   "colspan")));
     }
   }
   evas_object_show(lay);
@@ -103,10 +107,14 @@ refresh_layout(Elegance_Gengrid_Item *item)
       {
 	lay = refresh_childs(data_subchild);
       	data->tool.function_pack(new, lay,
-      				 data_subchild->prop->row,
-				 data_subchild->prop->col,
-				 data_subchild->prop->rowspan,
-				 data_subchild->prop->colspan);
+				 atoi(eina_hash_find(data_subchild->prop,
+						     "row")),
+				 atoi(eina_hash_find(data_subchild->prop,
+						     "col")),
+				 atoi(eina_hash_find(data_subchild->prop,
+						     "rowspan")),
+				 atoi(eina_hash_find(data_subchild->prop,
+						     "colspan")));
       }
     }
   }

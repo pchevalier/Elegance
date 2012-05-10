@@ -9,6 +9,11 @@ Elegance_Content *actual_content = NULL; // actual select content
 static int lvl;
 
 //--// callbacks
+void
+hash_table_data_free_cb(void *data)
+{
+  free(data);
+}
 
 //--// private routines
 // function to print all childs of a content
