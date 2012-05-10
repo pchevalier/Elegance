@@ -11,6 +11,16 @@ static Evas_Object *tree_popup;
 Eina_Bool popup_on = EINA_FALSE;
 
 //--// callbacks
+static int
+gl_cmp(const void *pa, const void *pb)
+{
+  const Elm_Object_Item *ia = pa, *ib = pb;
+  Elegance_Property *a = elm_object_item_data_get(ia);
+  Elegance_Property *b = elm_object_item_data_get(ib);
+
+  return strcmp(a->name, b->name);
+}
+
 static void
 _dismissed(void *data __UNUSED__,
 	   Evas_Object *obj,
@@ -24,6 +34,22 @@ _dismissed(void *data __UNUSED__,
   popup_on = EINA_FALSE;
 }
 
+static Eina_Bool
+hash_fn(const Eina_Hash *hash __UNUSED__,
+	const void *key,
+	void *data,
+	void *fdata __UNUSED__)
+{
+  Elegance_Property *prop = malloc(sizeof(Elegance_Property));
+
+  prop->name = key;
+  prop->data = data;
+  elm_genlist_item_sorted_insert(tree_list, &itc, prop, NULL,
+				 ELM_GENLIST_ITEM_NONE, gl_cmp,
+				 NULL, NULL);
+  return EINA_TRUE;
+}
+
 static void
 _popup_item_cb(void *data,
 	       Evas_Object *obj,
@@ -34,10 +60,7 @@ _popup_item_cb(void *data,
   if (actual_selected != content)
   {
     elm_genlist_clear(tree_list);
-
-    elm_genlist_item_append(tree_list, &itc, content, NULL,
-			    ELM_GENLIST_ITEM_NONE,
-			    NULL, NULL);
+    eina_hash_foreach(content->prop, hash_fn, NULL);
     actual_selected = content;
   }
   _dismissed(NULL, obj, NULL);
@@ -93,22 +116,22 @@ gl_text_get(void *data,
 	    Evas_Object *obj __UNUSED__,
 	    const char *part __UNUSED__)
 {
-  Elegance_Content *content = data;
+  Elegance_Property *prop = data;
   char buf[256];
 
-  snprintf(buf, sizeof(buf), "%s", content->name);
+  snprintf(buf, sizeof(buf), "%s", prop->name);
   return strdup(buf);
 }
 
 static Evas_Object *
 display_property(Evas_Object *entry,
-		 Elegance_Content *content)
+		 Elegance_Property *prop)
 {
   Elm_Entry_Filter_Limit_Size filter_limit;
   Elm_Entry_Filter_Accept_Set filter_accept;
 
   entry = elm_entry_add(design_win);
-  elm_entry_entry_append(entry, content->tool.icon_small);
+  elm_entry_entry_append(entry, prop->data);
   elm_entry_single_line_set(entry, EINA_TRUE);
   evas_object_size_hint_weight_set(entry,
 				     EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
@@ -131,11 +154,11 @@ gl_content_get(void *data,
 	       const char *part __UNUSED__)
 {
   Evas_Object *entry = NULL;
-  Elegance_Content *content = data;
+  Elegance_Property *prop = data;
 
   if (!strcmp(part, "elm.swallow.end"))
   {
-    return display_property(entry, content);
+    return display_property(entry, prop);
   }
 
   return entry;

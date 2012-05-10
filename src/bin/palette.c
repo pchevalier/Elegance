@@ -158,6 +158,7 @@ add_in_container(const Elegance_Tool *list,
   int j = 0;
   Elegance_Content *content;
   Elegance_Property prop[] = {
+    { "name", list[i].name },
     { "x", "0" },
     { "y", "0" },
     { "w", "800" },

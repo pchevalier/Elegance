@@ -143,6 +143,7 @@ view_add(void)
   Elegance_Tool tool = {"special", "special", "special", "special", "special",
 			elm_win_inwin_add, elm_win_inwin_content_set };
   Elegance_Property prop[] = {
+    { "name", "inwin" },
     { "x", "0" },
     { "y", "0" },
     { "w", "800" },
