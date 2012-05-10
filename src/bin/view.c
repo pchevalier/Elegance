@@ -180,15 +180,6 @@ view_add(void)
   evas_object_show(lay);
   evas_object_show(inwin);
 
-  // fill content's properties
-  /* prop->x = 0; */
-  /* prop->y = 0; */
-  /* prop->w = 800; */
-  /* prop->h = 600; */
-  /* prop->row = 0; */
-  /* prop->col = 0; */
-  /* prop->rowspan = 1; */
-  /* prop->colspan = 1; */
   content->prop = eina_hash_string_superfast_new(hash_table_data_free_cb);
 
   for (i = 0; prop[i].name != NULL; i++)

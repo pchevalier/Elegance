@@ -154,7 +154,7 @@ add_in_container(const Elegance_Tool *list,
 		 int i)
 {
   Evas_Object *new, *lay;
-  int row = 0;
+  int col = 0;
   int j = 0;
   Elegance_Content *content;
   Elegance_Property prop[] = {
@@ -190,41 +190,41 @@ add_in_container(const Elegance_Tool *list,
   evas_object_size_hint_align_set(lay, EVAS_HINT_FILL, EVAS_HINT_FILL);
   actual_content->tool.function_pack(actual_content->obj, lay,
 				     atoi(eina_hash_find(actual_content->prop,
-							 "row")),
-				     atoi(eina_hash_find(actual_content->prop,
 							 "col")),
 				     atoi(eina_hash_find(actual_content->prop,
-							 "rowspan")),
+							 "row")),
 				     atoi(eina_hash_find(actual_content->prop,
-							 "colspan")));
+							 "colspan")),
+				     atoi(eina_hash_find(actual_content->prop,
+							 "rowspan")));
 
   new = list[i].function_add(design_win);
   elm_object_part_content_set(lay, "elm.swallow.add_in_object", new);
 
-  row = atoi(eina_hash_find(actual_content->prop, "row"));
+  col = atoi(eina_hash_find(actual_content->prop, "col"));
   if (!strcmp(actual_content->name, "table"))
   {
     char *old;
     char buf[256];
 
-    snprintf(buf, sizeof(buf), "%i", ++row);
-    old = eina_hash_set(actual_content->prop, "row", strdup(buf));
+    snprintf(buf, sizeof(buf), "%i", ++col);
+    old = eina_hash_set(actual_content->prop, "col", strdup(buf));
     free(old);
   }
 
-  if (row > 3)
+  if (col > 3)
   {
     char *old1, *old2;
-    int col;
+    int row;
     char buf[256];
 
     snprintf(buf, sizeof(buf), "%i", 0);
-    old1 = eina_hash_set(actual_content->prop, "row", strdup(buf));
+    old1 = eina_hash_set(actual_content->prop, "col", strdup(buf));
     free(old1);
 
-    col = atoi(eina_hash_find(actual_content->prop, "col"));
-    snprintf(buf, sizeof(buf), "%i", col + 1);
-    old2 = eina_hash_set(actual_content->prop, "col", strdup(buf));
+    row = atoi(eina_hash_find(actual_content->prop, "row"));
+    snprintf(buf, sizeof(buf), "%i", row + 1);
+    old2 = eina_hash_set(actual_content->prop, "row", strdup(buf));
     free(old2);
   }
 
