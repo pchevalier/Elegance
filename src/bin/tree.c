@@ -160,10 +160,10 @@ item_new(const char * label,
 //--// public routines
 // fill the choice item popup
 void
-_show_its_properties_cb(void *data,
-			Evas *e __UNUSED__,
-			Evas_Object *obj,
-			void *event_info __UNUSED__)
+_show_its_properties_cb(void           *data,
+                         Evas_Object    *obj,
+                         const char     *emission,
+                         const char     *source)
 {
   Elegance_Content *content = data;
   Evas_Coord x,y;

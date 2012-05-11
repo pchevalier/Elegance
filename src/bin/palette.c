@@ -154,24 +154,22 @@ add_in_container(const Elegance_Tool *list,
 		 int i)
 {
   Evas_Object *new, *lay;
-  int col = 0;
   int j = 0;
   Elegance_Content *content;
+  char buf[256];
   Elegance_Property prop[] = {
     { "name", list[i].name },
     { "x", "0" },
     { "y", "0" },
     { "w", "800" },
     { "h", "600" },
-    { "row", eina_hash_find(actual_content->prop, "row") },
-    { "col", eina_hash_find(actual_content->prop, "col") },
     { "rowspan", "1" },
     { "colspan", "1" },
     { NULL, NULL }
   };
 
   ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
-	       "begin");
+	       "begin -- actual_content : %s", actual_content->name);
 
   content = malloc(sizeof(Elegance_Content));
   content->name = strdup(list[i].name);
@@ -183,59 +181,44 @@ add_in_container(const Elegance_Tool *list,
     eina_hash_add(content->prop, prop[j].name,
 		  strdup(prop[j].data));
   }
+  snprintf(buf, sizeof(buf), "%i", actual_content->col + 1);
+  eina_hash_add(content->prop, "col", strdup(buf));
+
+  snprintf(buf, sizeof(buf), "%i", actual_content->row + 1);
+  eina_hash_add(content->prop, "row", strdup(buf));
 
   lay = elm_layout_add(design_win);
   elm_layout_theme_set(lay, "layout", "application", "add_in_object");
   evas_object_size_hint_weight_set(lay, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
   evas_object_size_hint_align_set(lay, EVAS_HINT_FILL, EVAS_HINT_FILL);
   actual_content->tool.function_pack(actual_content->obj, lay,
-				     atoi(eina_hash_find(actual_content->prop,
-							 "col")),
-				     atoi(eina_hash_find(actual_content->prop,
-							 "row")),
-				     atoi(eina_hash_find(actual_content->prop,
-							 "colspan")),
-				     atoi(eina_hash_find(actual_content->prop,
-							 "rowspan")));
+				     actual_content->col,
+				     actual_content->row,
+				     1, 1);
 
   new = list[i].function_add(design_win);
   elm_object_part_content_set(lay, "elm.swallow.add_in_object", new);
 
-  col = atoi(eina_hash_find(actual_content->prop, "col"));
   if (!strcmp(actual_content->name, "table"))
+    actual_content->col++;
+
+  if (actual_content->col > 3)
   {
-    char *old;
-    char buf[256];
-
-    snprintf(buf, sizeof(buf), "%i", ++col);
-    old = eina_hash_set(actual_content->prop, "col", strdup(buf));
-    free(old);
-  }
-
-  if (col > 3)
-  {
-    char *old1, *old2;
-    int row;
-    char buf[256];
-
-    snprintf(buf, sizeof(buf), "%i", 0);
-    old1 = eina_hash_set(actual_content->prop, "col", strdup(buf));
-    free(old1);
-
-    row = atoi(eina_hash_find(actual_content->prop, "row"));
-    snprintf(buf, sizeof(buf), "%i", row + 1);
-    old2 = eina_hash_set(actual_content->prop, "row", strdup(buf));
-    free(old2);
+    actual_content->col = 0;
+    actual_content->row++;
   }
 
   content->obj = new;
   content->lay = lay;
   content->child = NULL;
   content->tool = list[i];
+  content->row = 0;
+  content->col = 0;
   actual_content->child = eina_list_append(actual_content->child, content);
 
-  evas_object_event_callback_add(new, EVAS_CALLBACK_MOUSE_DOWN,
-				 _show_its_properties_cb, content);
+  edje_object_signal_callback_add(elm_layout_edje_get(lay),
+				  "_show_its_properties", "fg",
+                                  _show_its_properties_cb, content);
 
   if (list == container_list)
   {

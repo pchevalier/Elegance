@@ -4,9 +4,9 @@
 extern Eina_Bool popup_on;
 
 Evas_Object *tree_add(Evas_Object *win);
-void _show_its_properties_cb(void *data,
-			     Evas *e,
-			     Evas_Object *obj,
-			     void *event_info);
+void _show_its_properties_cb(void           *data,
+			     Evas_Object    *obj,
+			     const char     *emission,
+			     const char     *source);
 
 #endif

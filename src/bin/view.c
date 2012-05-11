@@ -35,18 +35,16 @@ view_reload_child(Elegance_Content *data)
     {
       lay_sub = view_reload_child(data_subchild);
       data->tool.function_pack(new, lay_sub,
-			       atoi(eina_hash_find(data_subchild->prop,
-						   "row")),
-			       atoi(eina_hash_find(data_subchild->prop,
-						   "col")),
-			       atoi(eina_hash_find(data_subchild->prop,
-						   "rowspan")),
-			       atoi(eina_hash_find(data_subchild->prop,
-						   "colspan")));
+			       data_subchild->col,
+			       data_subchild->row,
+			       1, 1);
     }
   }
-  evas_object_event_callback_add(new, EVAS_CALLBACK_MOUSE_DOWN,
-				 _show_its_properties_cb, data);
+
+  edje_object_signal_callback_add(elm_layout_edje_get(lay),
+				  "_show_its_properties", "fg",
+                                  _show_its_properties_cb, NULL);
+
   evas_object_show(lay);
   return lay;
 }
@@ -118,18 +116,15 @@ view_reload(Eina_List *list)
       {
 	sublay = view_reload_child(data_subchild);
 	content->tool.function_pack(new, sublay,
-				    atoi(eina_hash_find(actual_content->prop,
-							"row")),
-				    atoi(eina_hash_find(actual_content->prop,
-							"col")),
-				    atoi(eina_hash_find(actual_content->prop,
-							"rowspan")),
-				    atoi(eina_hash_find(actual_content->prop,
-							"colspan")));
+				    actual_content->col,
+				    actual_content->row,
+				    1, 1);
       }
     }
-    evas_object_event_callback_add(new, EVAS_CALLBACK_MOUSE_DOWN,
-				   _show_its_properties_cb, content);
+
+    edje_object_signal_callback_add(elm_layout_edje_get(lay),
+				    "_show_its_properties", "fg",
+				    _show_its_properties_cb, content);
   }
 }
 
@@ -148,8 +143,8 @@ view_add(void)
     { "y", "0" },
     { "w", "800" },
     { "h", "600" },
-    { "row", "0" },
-    { "col", "0" },
+    { "row", "1" },
+    { "col", "1" },
     { "rowspan", "1" },
     { "colspan", "1" },
     { NULL, NULL }
@@ -191,11 +186,14 @@ view_add(void)
   content->lay = lay;
   content->tool = tool;
   content->child = NULL;
+  content->row = 0;
+  content->col = 0;
   actual_page->contents = eina_list_append(actual_page->contents,
 					   content);
 
-  evas_object_event_callback_add(inwin, EVAS_CALLBACK_MOUSE_DOWN,
-				 _show_its_properties_cb, content);
+  edje_object_signal_callback_add(elm_layout_edje_get(lay),
+				  "_show_its_properties", "fg",
+				  _show_its_properties_cb, content);
 
   // focus this content
   actual_content = content;

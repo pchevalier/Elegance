@@ -18,6 +18,8 @@ struct		_Elegance_Content
     Evas_Object		*obj; // associated Evas object
     Evas_Object		*lay; // content's layout
     Eina_List		*child; // list of content's childs
+    int			col; // for insertion into table
+    int			row; // for insertion into table
     Eina_Hash		*prop; // object's properties
 };
 
