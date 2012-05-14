@@ -116,8 +116,8 @@ view_reload(Eina_List *list)
       {
 	sublay = view_reload_child(data_subchild);
 	content->tool.function_pack(new, sublay,
-				    actual_content->col,
-				    actual_content->row,
+				    data_subchild->col,
+				    data_subchild->row,
 				    1, 1);
       }
     }

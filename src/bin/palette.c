@@ -173,6 +173,8 @@ add_in_container(const Elegance_Tool *list,
 
   content = malloc(sizeof(Elegance_Content));
   content->name = strdup(list[i].name);
+  content->row = actual_content->row;
+  content->col = actual_content->col;
 
   content->prop = eina_hash_string_superfast_new(hash_table_data_free_cb);
 
@@ -212,8 +214,6 @@ add_in_container(const Elegance_Tool *list,
   content->lay = lay;
   content->child = NULL;
   content->tool = list[i];
-  content->row = 0;
-  content->col = 0;
   actual_content->child = eina_list_append(actual_content->child, content);
 
   edje_object_signal_callback_add(elm_layout_edje_get(lay),
