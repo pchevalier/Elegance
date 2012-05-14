@@ -175,6 +175,9 @@ _show_its_properties_cb(void           *data,
   // if no popup --> create and fill it
   if (!popup_on)
   {
+    ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+		 "if %p", content);
+
     // create the popup
     tree_popup = elm_popup_add(design_win);
     evas_object_size_hint_weight_set(tree_popup,
@@ -184,10 +187,17 @@ _show_its_properties_cb(void           *data,
     evas_object_move(tree_popup, x, y);
     evas_object_show(tree_popup);
     popup_on = EINA_TRUE;
+
+    ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+		 "end if");
   }
   // else --> just fill it with more items
   else
+  {
+    ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+		 "else");
     item_new(content->name, content->tool.icon_small, content);
+  }
 }
 
 // add the tree's genlist in Elegance to show item's properties

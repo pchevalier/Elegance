@@ -43,7 +43,7 @@ view_reload_child(Elegance_Content *data)
 
   edje_object_signal_callback_add(elm_layout_edje_get(lay),
 				  "_show_its_properties", "fg",
-                                  _show_its_properties_cb, NULL);
+                                  _show_its_properties_cb, data);
 
   evas_object_show(lay);
   return lay;
@@ -65,6 +65,9 @@ view_clean(Eina_List *list)
     if(content->child)
       view_clean(content->child);
 
+    edje_object_signal_callback_del_full(elm_layout_edje_get(content->lay),
+					 "_show_its_properties", "fg",
+					 _show_its_properties_cb, content);
     evas_object_del(content->obj);
     evas_object_del(content->lay);
   }
