@@ -30,6 +30,10 @@ slider-s.png \
 spinner-b.png \
 spinner-s.png \
 textblock-b.png \
-textblock-s.png
+textblock-s.png \
+icon1.png \
+icon2.png \
+icon3.png \
+movie.avi
 
 EXTRA_DIST = $(files_DATA)

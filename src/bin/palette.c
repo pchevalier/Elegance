@@ -10,31 +10,31 @@ static Evas_Object *palette_list;
 // special list for container tools
 static const Elegance_Tool container_list[2] = {
   { "container", "box", "Box", "box-s.png", "box-b.png",
-    elm_box_add, elm_box_pack_end },
+    elm_box_add, elm_box_pack_end, NULL },
   { "container", "table", "Table", "table-s.png", "table-b.png",
-    elm_table_add, elm_table_pack },
+    elm_table_add, elm_table_pack, NULL },
 };
 
 // list for all elm tools
 static const Elegance_Tool elm_list[9] = {
   { "elementary", "icon", "Icon", "icon-s.png", "icon-b.png",
-    elm_icon_add, NULL },
+    elm_icon_add, NULL, apply_icon_specificities },
   { "elementary", "button", "Button", "button-s.png", "button-b.png",
-    elm_button_add, NULL },
+    elm_button_add, NULL, apply_button_specificities },
   { "elementary", "clock", "Clock", "clock-s.png", "clock-b.png",
-    elm_clock_add, NULL },
+    elm_clock_add, NULL, NULL },
   { "elementary", "video", "Video", "video-s.png", "video-b.png",
-    elm_video_add, NULL },
+    elm_video_add, NULL, apply_video_specificities },
   { "elementary", "bubble", "Bubble", "bubble-s.png", "bubble-b.png",
-    elm_bubble_add, NULL },
+    elm_bubble_add, NULL, apply_bubble_specificities },
   { "elementary", "calendar", "Calendar", "calendar-s.png", "calendar-b.png",
-    elm_calendar_add, NULL },
+    elm_calendar_add, NULL, NULL },
   { "elementary", "entry", "Entry", "entry-s.png", "entry-b.png",
-    elm_entry_add, NULL },
+    elm_entry_add, NULL, apply_entry_specificities },
   { "elementary", "slider", "Slider", "slider-s.png", "slider-b.png",
-    elm_slider_add, NULL },
+    elm_slider_add, NULL, apply_slider_specificities },
   { "elementary", "spinner", "Spinner", "spinner-s.png", "spinner-b.png",
-    elm_spinner_add, NULL },
+    elm_spinner_add, NULL, NULL },
 };
 
 //--// callbacks
@@ -219,6 +219,9 @@ add_in_container(const Elegance_Tool *list,
   edje_object_signal_callback_add(elm_layout_edje_get(lay),
 				  "_show_its_properties", "fg",
                                   _show_its_properties_cb, content);
+
+  if (list[i].function_prop)
+    list[i].function_prop(content);
 
   if (list == container_list)
   {

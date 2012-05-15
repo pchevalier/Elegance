@@ -32,7 +32,9 @@ elegance_SOURCES = \
  dnd.c \
  dnd.h \
  serialize.c \
- serialize.h
+ serialize.h \
+specificity.c \
+specificity.h
 
 elegancedir = $(libdir)
 elegance_LDADD = @ELEMENTARY_LIBS@

@@ -2,6 +2,7 @@
 # define ELEGANCE_MAIN_H
 
 # include <Elementary.h>
+# include <Emotion.h>
 # include "config.h"
 # include "palette.h"
 # include "serialize.h"
@@ -11,6 +12,7 @@
 # include "status.h"
 # include "panel.h"
 # include "tree.h"
+# include "specificity.h"
 # include "view.h"
 # include "dnd.h"
 

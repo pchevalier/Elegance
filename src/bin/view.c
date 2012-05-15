@@ -25,6 +25,10 @@ view_reload_child(Elegance_Content *data)
   data->obj = new = data->tool.function_add(design_win);
   elm_object_part_content_set(lay,
 			      "elm.swallow.add_in_object", new);
+
+  if (data->tool.function_prop)
+    data->tool.function_prop(data);
+
   if (data->child)
   {
     Eina_List *l_subchild;
@@ -92,6 +96,9 @@ view_reload(Eina_List *list)
     elm_layout_theme_set(lay, "layout", "application", "add_in_object");
     content->obj = new = content->tool.function_add(design_win);
 
+    if (content->tool.function_prop)
+      content->tool.function_prop(content);
+
     // special part for inwin
     if (!strcmp(content->name, "inwin"))
     {
@@ -139,7 +146,7 @@ view_add(void)
   Evas_Object *lay, *inwin;
   Elegance_Content *content;
   Elegance_Tool tool = {"special", "special", "special", "special", "special",
-			elm_win_inwin_add, elm_win_inwin_content_set };
+			elm_win_inwin_add, elm_win_inwin_content_set, NULL};
   Elegance_Property prop[] = {
     { "name", "inwin" },
     { "x", "0" },
