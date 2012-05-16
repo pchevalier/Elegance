@@ -87,7 +87,7 @@ gl_del(void *data __UNUSED__,
 {
 }
 
-char *
+static char *
 gl8_text_get(void *data,
 	     Evas_Object *obj __UNUSED__,
 	     const char *part __UNUSED__)
@@ -104,6 +104,7 @@ gl8_text_get(void *data,
     snprintf(buf, sizeof(buf), "%s", "elementary");
     return strdup(buf);
   }
+  return NULL;
 }
 
 //--// private routines

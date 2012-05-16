@@ -12,11 +12,69 @@ Eina_Bool popup_on = EINA_FALSE;
 
 //--// callbacks
 // others
+// callback for fileselector button
+static void /* hook on the sole smart callback */
+_file_chosen(void *data,
+             Evas_Object *obj __UNUSED__,
+             void *event_info)
+{
+  const char *file = event_info;
+  Elegance_Property *prop = data;
+
+  if (file)
+  {
+    ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+		 "begin - %s\n%s\n%s", file, actual_selected->name,
+		 prop->name);
+    eina_hash_set(actual_selected->prop, prop->name, strdup(file));
+  }
+  view_clean(actual_page->contents);
+  view_reload(actual_page->contents);
+}
+
+// callback for changed entry
+static void /* hook on the sole smart callback */
+_entry_changed(void *data __UNUSED__,
+	       Evas_Object *obj __UNUSED__,
+	       void *event_info __UNUSED__)
+{
+  view_clean(actual_page->contents);
+  view_reload(actual_page->contents);
+}
+
 // function which fill the genlist item with an entry
 static Evas_Object *
 display_property(Evas_Object *entry,
 		 Elegance_Property *prop)
 {
+  char *dest = calloc(4, 1);
+
+  strncat(dest, prop->name,4);
+  if (!strcmp(dest, "label") || !strcmp(dest, "info") || !strcmp(dest, "name"))
+  {
+    entry = elm_entry_add(design_win);
+    elm_entry_entry_append(entry, prop->data);
+    elm_entry_single_line_set(entry, EINA_TRUE);
+    evas_object_size_hint_weight_set(entry,
+				     EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+    evas_object_size_hint_align_set(entry,
+				    EVAS_HINT_FILL, EVAS_HINT_FILL);
+    evas_object_smart_callback_add(entry,
+				   "unfocused",
+				   _entry_changed, prop);
+    return entry;
+  }
+  if (!strcmp(dest, "icon") || !strcmp(dest, "file"))
+  {
+    entry = elm_fileselector_button_add(design_win);
+    elm_fileselector_button_inwin_mode_set(entry, EINA_TRUE);
+    elm_fileselector_button_path_set(entry, "/home");
+    elm_object_text_set(entry, "File");
+    evas_object_smart_callback_add(entry,
+				   "file,chosen",
+				   _file_chosen, prop);
+    return entry;
+  }
   Elm_Entry_Filter_Limit_Size filter_limit;
   Elm_Entry_Filter_Accept_Set filter_accept;
 
@@ -24,7 +82,7 @@ display_property(Evas_Object *entry,
   elm_entry_entry_append(entry, prop->data);
   elm_entry_single_line_set(entry, EINA_TRUE);
   evas_object_size_hint_weight_set(entry,
-				     EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+				   EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
   evas_object_size_hint_align_set(entry,
 				  EVAS_HINT_FILL, EVAS_HINT_FILL);
   filter_limit.max_char_count = 10;
@@ -35,6 +93,9 @@ display_property(Evas_Object *entry,
   elm_entry_markup_filter_append(entry,
 				 elm_entry_filter_accept_set,
 				 &filter_accept);
+  evas_object_smart_callback_add(entry,
+				 "unfocused",
+				 _entry_changed, prop);
   return entry;
 }
 
@@ -134,8 +195,8 @@ _popup_item_cb(void *data,
   if (actual_selected != content)
   {
     elm_genlist_clear(tree_list);
-    eina_hash_foreach(content->prop, hash_fn, NULL);
     actual_selected = content;
+    eina_hash_foreach(content->prop, hash_fn, NULL);
   }
   _dismissed(NULL, obj, NULL);
 }
@@ -161,9 +222,9 @@ item_new(const char * label,
 // fill the choice item popup
 void
 _show_its_properties_cb(void           *data,
-                         Evas_Object    *obj,
-                         const char     *emission,
-                         const char     *source)
+			Evas_Object    *obj,
+			const char     *emission __UNUSED__,
+			const char     *source __UNUSED__)
 {
   Elegance_Content *content = data;
   Evas_Coord x,y;
@@ -175,9 +236,6 @@ _show_its_properties_cb(void           *data,
   // if no popup --> create and fill it
   if (!popup_on)
   {
-    ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
-		 "if %p", content);
-
     // create the popup
     tree_popup = elm_popup_add(design_win);
     evas_object_size_hint_weight_set(tree_popup,
@@ -187,17 +245,10 @@ _show_its_properties_cb(void           *data,
     evas_object_move(tree_popup, x, y);
     evas_object_show(tree_popup);
     popup_on = EINA_TRUE;
-
-    ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
-		 "end if");
   }
   // else --> just fill it with more items
   else
-  {
-    ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
-		 "else");
     item_new(content->name, content->tool.icon_small, content);
-  }
 }
 
 // add the tree's genlist in Elegance to show item's properties
@@ -219,9 +270,12 @@ tree_add(Evas_Object *win)
 
   // create the genlist into Elegance
   tree_list = elm_genlist_add(win);
+  elm_genlist_homogeneous_set(tree_list, EINA_TRUE);
   elm_genlist_select_mode_set(tree_list, ELM_OBJECT_SELECT_MODE_NONE);
-  evas_object_size_hint_weight_set(tree_list, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-  evas_object_size_hint_align_set(tree_list, EVAS_HINT_FILL, EVAS_HINT_FILL);
+  evas_object_size_hint_weight_set(tree_list,
+				   EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+  evas_object_size_hint_align_set(tree_list,
+				  EVAS_HINT_FILL, EVAS_HINT_FILL);
   evas_object_show(tree_list);
 
   return tree_list;

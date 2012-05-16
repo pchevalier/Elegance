@@ -136,7 +136,7 @@ _call_new_page_cb(void *data __UNUSED__,
 
 // callback for reloading a page
 static void
-_call_reload_cb(void *data __UNUSED__,
+_call_reload_cb(void *data,
 		Evas *e __UNUSED__,
 		Evas_Object *obj __UNUSED__,
 		void *event_info __UNUSED__)

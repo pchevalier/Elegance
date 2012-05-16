@@ -21,12 +21,11 @@ apply_bubble_specificities(Elegance_Content *content)
 {
   Evas_Object *icon1 = elm_icon_add(design_win);
   Evas_Object *icon2 = elm_icon_add(design_win);
-  char buf[PATH_MAX];
   Elegance_Property prop[] = {
     { "label", "**LABEL**" },
     { "info", "**INFO**" },
-    { "icon 1", "icon1.png" },
-    { "icon 2", "icon1.png" },
+    { "icon 1", PACKAGE_DATA_DIR"/tools/icon1.png" },
+    { "icon 2", PACKAGE_DATA_DIR"/tools/icon1.png" },
     { NULL, NULL }
   };
   int j = 0;
@@ -35,21 +34,21 @@ apply_bubble_specificities(Elegance_Content *content)
 	       "begin");
 
   for (j = 0; prop[j].name != NULL; j++)
-  {
-    eina_hash_add(content->prop, prop[j].name,
-		  strdup(prop[j].data));
-  }
+    if (!eina_hash_find(content->prop, prop[j].name))
+      eina_hash_direct_add(content->prop, prop[j].name,
+			   strdup(prop[j].data));
 
-  elm_object_part_text_set(content->obj, NULL, prop[0].data);
-  elm_object_part_text_set(content->obj, "info", prop[1].data);
+  elm_object_part_text_set(content->obj, NULL, eina_hash_find(content->prop,
+							      "label"));
+  elm_object_part_text_set(content->obj, "info", eina_hash_find(content->prop,
+								"info"));
 
-  snprintf(buf, sizeof(buf), "%s/tools/%s", PACKAGE_DATA_DIR, prop[2].data);
-  elm_icon_file_set(icon1, buf, NULL);
-  evas_object_size_hint_max_set(icon1, 100, 100);
+  elm_icon_file_set(icon1, eina_hash_find(content->prop,
+					  "icon 1"), NULL);
   elm_object_part_content_set(content->obj, NULL, icon1);
 
-  snprintf(buf, sizeof(buf), "%s/tools/%s", PACKAGE_DATA_DIR, prop[3].data);
-  elm_icon_file_set(icon2, buf, NULL);
+  elm_icon_file_set(icon2, eina_hash_find(content->prop,
+					  "icon 2"), NULL);
   elm_object_part_content_set(content->obj, "icon", icon2);
 }
 
@@ -58,23 +57,21 @@ void
 apply_icon_specificities(Elegance_Content *content)
 {
   Elegance_Property prop[] = {
-    { "icon", "icon1.png" },
+    { "icon", PACKAGE_DATA_DIR"/tools/icon1.png" },
     { NULL, NULL }
   };
-  char buf[PATH_MAX];
   int j = 0;
 
   ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
 	       "begin");
 
   for (j = 0; prop[j].name != NULL; j++)
-  {
-    eina_hash_add(content->prop, prop[j].name,
-		  strdup(prop[j].data));
-  }
+    if (!eina_hash_find(content->prop, prop[j].name))
+      eina_hash_add(content->prop, prop[j].name,
+		    strdup(prop[j].data));
 
-  snprintf(buf, sizeof(buf), "%s/tools/%s", PACKAGE_DATA_DIR, prop[0].data);
-  elm_icon_file_set(content->obj, buf, NULL);
+  elm_icon_file_set(content->obj, eina_hash_find(content->prop,
+						 "icon"), NULL);
 }
 
 // set specific options for video
@@ -82,10 +79,9 @@ void
 apply_video_specificities(Elegance_Content *content)
 {
   Elegance_Property prop[] = {
-    { "file", "movie.avi" },
+    { "file", PACKAGE_DATA_DIR"/tools/movie.avi" },
     { NULL, NULL }
   };
-  char buf[PATH_MAX];
   int j = 0;
   Evas_Object *emotion_obj = elm_video_emotion_get(content->obj);
 
@@ -93,15 +89,13 @@ apply_video_specificities(Elegance_Content *content)
 	       "begin");
 
   for (j = 0; prop[j].name != NULL; j++)
-  {
-    eina_hash_add(content->prop, prop[j].name,
-		  strdup(prop[j].data));
-  }
+    if (!eina_hash_find(content->prop, prop[j].name))
+      eina_hash_add(content->prop, prop[j].name,
+		    strdup(prop[j].data));
 
-  snprintf(buf, sizeof(buf), "%s/tools/%s", PACKAGE_DATA_DIR, prop[0].data);
-  elm_video_file_set(content->obj, buf);
+  elm_video_file_set(content->obj, eina_hash_find(content->prop,
+						  "file"));
   elm_video_play(content->obj);
-  emotion_object_audio_mute_set(emotion_obj, EINA_TRUE);
   evas_object_smart_callback_add(emotion_obj,
 				 "playback_finished",
 				 _loop_video_cb, content);
@@ -113,26 +107,25 @@ apply_button_specificities(Elegance_Content *content)
 {
   Elegance_Property prop[] = {
     { "label", "**LABEL**" },
-    { "icon", "icon1.png" },
+    { "icon", PACKAGE_DATA_DIR"/tools/icon1.png" },
     { NULL, NULL }
   };
   int j = 0;
-  char buf[PATH_MAX];
   Evas_Object *icon = elm_icon_add(design_win);
 
   ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
 	       "begin");
 
   for (j = 0; prop[j].name != NULL; j++)
-  {
-    eina_hash_add(content->prop, prop[j].name,
-		  strdup(prop[j].data));
-  }
+    if (!eina_hash_find(content->prop, prop[j].name))
+      eina_hash_add(content->prop, prop[j].name,
+		    strdup(prop[j].data));
 
-  elm_object_part_text_set(content->obj, NULL, prop[0].data);
+  elm_object_part_text_set(content->obj, NULL, eina_hash_find(content->prop,
+							      "label"));
 
-  snprintf(buf, sizeof(buf), "%s/tools/%s", PACKAGE_DATA_DIR, prop[1].data);
-  elm_icon_file_set(icon, buf, NULL);
+  elm_icon_file_set(icon, eina_hash_find(content->prop,
+					 "icon"), NULL);
   evas_object_size_hint_max_set(icon, 50, 50);
   elm_object_part_content_set(content->obj, "icon", icon);
 }
@@ -151,12 +144,12 @@ apply_entry_specificities(Elegance_Content *content)
 	       "begin");
 
   for (j = 0; prop[j].name != NULL; j++)
-  {
-    eina_hash_add(content->prop, prop[j].name,
-		  strdup(prop[j].data));
-  }
+    if (!eina_hash_find(content->prop, prop[j].name))
+      eina_hash_add(content->prop, prop[j].name,
+		    strdup(prop[j].data));
 
-  elm_object_part_text_set(content->obj, NULL, prop[0].data);
+  elm_object_part_text_set(content->obj, NULL, eina_hash_find(content->prop,
+							      "label"));
 }
 
 // set specific options for slider
@@ -173,10 +166,10 @@ apply_slider_specificities(Elegance_Content *content)
 	       "begin");
 
   for (j = 0; prop[j].name != NULL; j++)
-  {
-    eina_hash_add(content->prop, prop[j].name,
-		  strdup(prop[j].data));
-  }
+    if (!eina_hash_find(content->prop, prop[j].name))
+      eina_hash_add(content->prop, prop[j].name,
+		    strdup(prop[j].data));
 
-  elm_object_part_text_set(content->obj, NULL, prop[0].data);
+  elm_object_part_text_set(content->obj, NULL, eina_hash_find(content->prop,
+							      "label"));
 }
