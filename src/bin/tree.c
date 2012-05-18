@@ -13,7 +13,7 @@ Eina_Bool popup_on = EINA_FALSE;
 //--// callbacks
 // others
 // callback for fileselector button
-static void /* hook on the sole smart callback */
+static void
 _file_chosen(void *data,
              Evas_Object *obj __UNUSED__,
              void *event_info)
@@ -22,18 +22,29 @@ _file_chosen(void *data,
   Elegance_Property *prop = data;
 
   if (file)
-  {
-    ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
-		 "begin - %s\n%s\n%s", file, actual_selected->name,
-		 prop->name);
     eina_hash_set(actual_selected->prop, prop->name, strdup(file));
-  }
+
   view_clean(actual_page->contents);
   view_reload(actual_page->contents);
 }
 
-// callback for changed entry
-static void /* hook on the sole smart callback */
+// callback for changed string entry
+static void
+_label_changed(void *data,
+	       Evas_Object *obj,
+	       void *event_info __UNUSED__)
+{
+  Elegance_Property *prop = data;
+
+  eina_hash_set(actual_selected->prop,
+		prop->name, elm_object_text_get(obj));
+
+  view_clean(actual_page->contents);
+  view_reload(actual_page->contents);
+}
+
+// callback for changed integer entry
+static void
 _entry_changed(void *data __UNUSED__,
 	       Evas_Object *obj __UNUSED__,
 	       void *event_info __UNUSED__)
@@ -50,20 +61,6 @@ display_property(Evas_Object *entry,
   char *dest = calloc(4, 1);
 
   strncat(dest, prop->name,4);
-  if (!strcmp(dest, "label") || !strcmp(dest, "info") || !strcmp(dest, "name"))
-  {
-    entry = elm_entry_add(design_win);
-    elm_entry_entry_append(entry, prop->data);
-    elm_entry_single_line_set(entry, EINA_TRUE);
-    evas_object_size_hint_weight_set(entry,
-				     EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-    evas_object_size_hint_align_set(entry,
-				    EVAS_HINT_FILL, EVAS_HINT_FILL);
-    evas_object_smart_callback_add(entry,
-				   "unfocused",
-				   _entry_changed, prop);
-    return entry;
-  }
   if (!strcmp(dest, "icon") || !strcmp(dest, "file"))
   {
     entry = elm_fileselector_button_add(design_win);
@@ -75,28 +72,41 @@ display_property(Evas_Object *entry,
 				   _file_chosen, prop);
     return entry;
   }
-  Elm_Entry_Filter_Limit_Size filter_limit;
-  Elm_Entry_Filter_Accept_Set filter_accept;
+  else
+  {
+    Elm_Entry_Filter_Limit_Size filter_limit;
+    Elm_Entry_Filter_Accept_Set filter_accept;
 
-  entry = elm_entry_add(design_win);
-  elm_entry_entry_append(entry, prop->data);
-  elm_entry_single_line_set(entry, EINA_TRUE);
-  evas_object_size_hint_weight_set(entry,
-				   EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-  evas_object_size_hint_align_set(entry,
-				  EVAS_HINT_FILL, EVAS_HINT_FILL);
-  filter_limit.max_char_count = 10;
-  filter_accept.accepted = "0123456789";
-  elm_entry_markup_filter_append(entry,
-				 elm_entry_filter_limit_size,
-				 &filter_limit);
-  elm_entry_markup_filter_append(entry,
-				 elm_entry_filter_accept_set,
-				 &filter_accept);
-  evas_object_smart_callback_add(entry,
-				 "unfocused",
-				 _entry_changed, prop);
-  return entry;
+    entry = elm_entry_add(design_win);
+    elm_entry_entry_append(entry, prop->data);
+    elm_entry_single_line_set(entry, EINA_TRUE);
+    evas_object_size_hint_weight_set(entry,
+				     EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+    evas_object_size_hint_align_set(entry,
+				    EVAS_HINT_FILL, EVAS_HINT_FILL);
+    if (!strcmp(dest, "labe") || !strcmp(dest, "info") || !strcmp(dest, "name"))
+    {
+      evas_object_smart_callback_add(entry,
+				     "unfocused",
+				     _label_changed, prop);
+      return entry;
+    }
+    else
+    {
+      filter_limit.max_char_count = 10;
+      filter_accept.accepted = "0123456789";
+      elm_entry_markup_filter_append(entry,
+				     elm_entry_filter_limit_size,
+				     &filter_limit);
+      elm_entry_markup_filter_append(entry,
+				     elm_entry_filter_accept_set,
+				     &filter_accept);
+      evas_object_smart_callback_add(entry,
+				     "unfocused",
+				     _entry_changed, prop);
+      return entry;
+    }
+  }
 }
 
 // genlist's callbacks
