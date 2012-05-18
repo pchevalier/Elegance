@@ -6,7 +6,7 @@ INCLUDES = \
 -I$(top_srcdir) \
 -I$(top_srcdir)/src/bin \
 -DPACKAGE_DATA_DIR=\"$(datadir)/$(PACKAGE)\" \
-@ELEMENTARY_CFLAGS@
+@EFL_CFLAGS@ @ELEMENTARY_CFLAGS@
 
 bin_PROGRAMS = elegance
 
@@ -37,7 +37,7 @@ specificity.c \
 specificity.h
 
 elegancedir = $(libdir)
-elegance_LDADD = @ELEMENTARY_LIBS@
+elegance_LDADD = @EFL_LIBS@ @ELEMENTARY_LIBS@
 elegance_CFLAGS =
 
 ### used for building a a quicklaunch mode version. not used/needed here
