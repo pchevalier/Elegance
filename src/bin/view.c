@@ -131,7 +131,6 @@ view_reload(Eina_List *list)
 				    1, 1);
       }
     }
-
     edje_object_signal_callback_add(elm_layout_edje_get(lay),
 				    "_show_its_properties", "fg",
 				    _show_its_properties_cb, content);
