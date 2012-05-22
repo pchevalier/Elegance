@@ -177,7 +177,6 @@ _label_changed(void *data,
 
   item->page->name = (char *)elm_object_text_get(obj);
   item->name = (char *)elm_object_text_get(obj);
-  elm_object_item_part_text_set(item->it, NULL, item->name);
   elm_gengrid_realized_items_update(status_grid->gengrid);
 
   ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
