@@ -36,8 +36,11 @@ _label_changed(void *data,
 {
   Elegance_Property *prop = data;
 
+  ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+	       "begin");
+
   eina_hash_set(actual_selected->prop,
-		prop->name, elm_object_text_get(obj));
+		prop->name, strdup(elm_object_text_get(obj)));
 
   view_clean(actual_page->contents);
   view_reload(actual_page->contents);
@@ -45,10 +48,18 @@ _label_changed(void *data,
 
 // callback for changed integer entry
 static void
-_entry_changed(void *data __UNUSED__,
-	       Evas_Object *obj __UNUSED__,
+_entry_changed(void *data,
+	       Evas_Object *obj,
 	       void *event_info __UNUSED__)
 {
+  Elegance_Property *prop = data;
+
+  ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+	       "begin");
+
+  eina_hash_set(actual_selected->prop,
+		prop->name, strdup(elm_object_text_get(obj)));
+
   view_clean(actual_page->contents);
   view_reload(actual_page->contents);
 }
@@ -87,7 +98,7 @@ display_property(Evas_Object *entry,
     if (!strcmp(dest, "labe") || !strcmp(dest, "info") || !strcmp(dest, "name"))
     {
       evas_object_smart_callback_add(entry,
-				     "unfocused",
+				     "changed",
 				     _label_changed, prop);
       return entry;
     }
@@ -102,7 +113,7 @@ display_property(Evas_Object *entry,
 				     elm_entry_filter_accept_set,
 				     &filter_accept);
       evas_object_smart_callback_add(entry,
-				     "unfocused",
+				     "changed",
 				     _entry_changed, prop);
       return entry;
     }
