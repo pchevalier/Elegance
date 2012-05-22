@@ -161,7 +161,8 @@ _call_reload_cb(void *data,
 
   view_reload(actual_page->contents);
   palette_refresh();
-  evas_object_del(status_popup);;
+  evas_object_del(status_popup);
+  elm_genlist_clear(tree_list);
 }
 
 // callback for changed string entry

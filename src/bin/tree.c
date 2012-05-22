@@ -4,10 +4,10 @@
 
 //--// globals
 static Elm_Genlist_Item_Class itc;
-static Evas_Object *tree_list;
 static Elegance_Content *actual_selected;
 static Evas_Object *tree_popup;
 
+Evas_Object *tree_list;
 Eina_Bool popup_on = EINA_FALSE;
 
 //--// callbacks
