@@ -4,6 +4,7 @@
 
 //--// globals
 Elegance_Gengrid *status_grid = NULL;
+static Evas_Object *status_popup = NULL;
 
 //--// callbacks
 static char *
@@ -121,6 +122,17 @@ refresh_layout(Elegance_Gengrid_Item *item)
   return item->lay;
 }
 
+static void
+_call_cancel_cb(void *data __UNUSED__,
+		Evas_Object *obj __UNUSED__,
+		void *event_info __UNUSED__)
+{
+  ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+	       "begin");
+
+  evas_object_del(status_popup);
+}
+
 // callback for adding a new page
 static void
 _call_new_page_cb(void *data __UNUSED__,
@@ -137,7 +149,6 @@ _call_new_page_cb(void *data __UNUSED__,
 // callback for reloading a page
 static void
 _call_reload_cb(void *data,
-		Evas *e __UNUSED__,
 		Evas_Object *obj __UNUSED__,
 		void *event_info __UNUSED__)
 {
@@ -145,12 +156,98 @@ _call_reload_cb(void *data,
 
   ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
 	       "begin");
-
   view_clean(actual_page->contents);
   actual_page = item->page;
 
   view_reload(actual_page->contents);
   palette_refresh();
+  evas_object_del(status_popup);;
+}
+
+// callback for changed string entry
+static void
+_label_changed(void *data,
+	       Evas_Object *obj,
+	       void *event_info __UNUSED__)
+{
+  Elegance_Gengrid_Item *item = data;
+
+  ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+	       "begin %s", item->page->name);
+
+  item->page->name = (char *)elm_object_text_get(obj);
+  item->name = (char *)elm_object_text_get(obj);
+  elm_object_item_part_text_set(item->it, NULL, item->name);
+  elm_gengrid_realized_items_update(status_grid->gengrid);
+
+  ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+	       "%s", item->page->name);
+}
+
+// callback to change item name
+static void
+_call_select_cb(void *data,
+		Evas *e __UNUSED__,
+		Evas_Object *obj __UNUSED__,
+		void *event_info __UNUSED__)
+{
+
+  Elegance_Gengrid_Item *item = data;
+  Evas_Object *btn1, *btn2, *table, *entry, *label;
+  Evas_Coord x,y;
+
+  ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+	       "begin");
+
+  if (item->page)
+  {
+    table = elm_table_add(design_win);
+    elm_table_homogeneous_set(table, EINA_TRUE);
+
+    label = elm_label_add(table);
+    elm_object_text_set(label, "Page's name: ");
+    evas_object_size_hint_fill_set(label, EVAS_HINT_FILL, EVAS_HINT_FILL);
+    evas_object_size_hint_weight_set(label, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+    elm_table_pack(table, label, 0, 0, 1, 1);
+    evas_object_show(label);
+
+    entry = elm_entry_add(table);
+    elm_entry_entry_append(entry, item->page->name);
+    elm_entry_single_line_set(entry, EINA_TRUE);
+    evas_object_size_hint_fill_set(entry, EVAS_HINT_FILL, EVAS_HINT_FILL);
+    evas_object_size_hint_weight_set(entry, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+    elm_table_pack(table, entry, 1, 0, 2, 1);
+    evas_object_show(entry);
+
+    evas_object_smart_callback_add(entry,
+				   "changed",
+				   _label_changed, item);
+
+    btn1 = elm_button_add(table);
+    elm_object_text_set(btn1, "Save & Refresh");
+    evas_object_size_hint_fill_set(btn1, EVAS_HINT_FILL, EVAS_HINT_FILL);
+    evas_object_size_hint_weight_set(btn1, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+    elm_table_pack(table, btn1, 0, 1, 2, 1);
+    evas_object_show(btn1);
+
+    btn2 = elm_button_add(table);
+    elm_object_text_set(btn2, "Cancel");
+    evas_object_size_hint_fill_set(btn2, EVAS_HINT_FILL, EVAS_HINT_FILL);
+    evas_object_size_hint_weight_set(btn2, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+    elm_table_pack(table, btn2, 2, 1, 1, 1);
+    evas_object_show(btn2);
+
+    status_popup = elm_ctxpopup_add(design_win);
+    elm_object_content_set(status_popup, table);
+    evas_object_size_hint_min_set(status_popup, 200, 100);
+
+    evas_pointer_canvas_xy_get(evas_object_evas_get(design_win), &x, &y);
+    evas_object_move(status_popup, x, y);
+    evas_object_show(status_popup);
+
+    evas_object_smart_callback_add(btn1, "clicked", _call_reload_cb, item);
+    evas_object_smart_callback_add(btn2, "clicked", _call_cancel_cb, NULL);
+  }
 }
 
 // add-in gengrid function
@@ -197,7 +294,7 @@ _grid_content_get(void        *data,
     elm_layout_theme_set(lay, "layout", "application", "add_in_object");
     lay = refresh_layout(item);
     evas_object_event_callback_add(lay, EVAS_CALLBACK_MOUSE_UP,
-				   _call_reload_cb, item);
+				   _call_select_cb, item);
     return lay;
   }
   return NULL;
@@ -243,9 +340,11 @@ status_refresh(void)
     status_grid->items = eina_list_append(status_grid->items,
 					  item);
 
-    elm_gengrid_item_insert_before(status_grid->gengrid, status_grid->gic, item,
-				   elm_gengrid_last_item_get(status_grid->gengrid),
-				   NULL, NULL);
+    item->it = elm_gengrid_item_insert_before(status_grid->gengrid,
+					status_grid->gic, item,
+					elm_gengrid_last_item_get(
+					  status_grid->gengrid),
+					NULL, NULL);
 
     status_grid->new_page = EINA_FALSE;
   }
@@ -276,8 +375,7 @@ status_add(Evas_Object *win)
   elm_gengrid_align_set(grid, 0, 0.5);
   elm_gengrid_multi_select_set(grid, EINA_FALSE);
   elm_gengrid_select_mode_set(grid, ELM_OBJECT_SELECT_MODE_NONE);
-  elm_gengrid_scroller_policy_set(grid, ELM_SCROLLER_POLICY_AUTO,
-				  ELM_SCROLLER_POLICY_OFF);
+  elm_gengrid_bounce_set(grid, EINA_TRUE, EINA_FALSE);
 
   // initialisation of the gengrid item class
   status_grid->gic = elm_gengrid_item_class_new();
@@ -288,7 +386,6 @@ status_add(Evas_Object *win)
   status_grid->gic->func.del = _grid_del;
 
   evas_object_show(grid);
-
   return grid;
 }
 

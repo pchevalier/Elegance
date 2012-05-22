@@ -8,6 +8,7 @@ struct	       _Elegance_Gengrid_Item
     char		*name; // item's name
     Evas_Object		*lay; // item's layout
     Elegance_Page	*page; // associated page
+    Elm_Object_Item	*it; // associated item
 };
 
 // structure of the status' gengrid

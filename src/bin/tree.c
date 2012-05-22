@@ -248,8 +248,6 @@ _show_its_properties_cb(void           *data,
   {
     // create the popup
     tree_popup = elm_popup_add(design_win);
-    evas_object_size_hint_weight_set(tree_popup,
-				     EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
     item_new(content->name, content->tool.icon_small, content);
     evas_pointer_canvas_xy_get(evas_object_evas_get(obj), &x, &y);
     evas_object_move(tree_popup, x, y);
@@ -286,6 +284,7 @@ tree_add(Evas_Object *win)
 				   EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
   evas_object_size_hint_align_set(tree_list,
 				  EVAS_HINT_FILL, EVAS_HINT_FILL);
+  elm_genlist_bounce_set(tree_list, EINA_FALSE, EINA_FALSE);
   evas_object_show(tree_list);
 
   return tree_list;

@@ -68,7 +68,6 @@ gl_content_get(void *data,
     dnd_icon_drag_set(o, d->icon_big);
     evas_object_size_hint_align_set(o, -1, -1);
     evas_object_show(o);
-    evas_object_pointer_mode_set(o, EVAS_OBJECT_POINTER_MODE_NOGRAB);
   }
   return o;
 }
@@ -108,7 +107,6 @@ gl8_text_get(void *data,
 }
 
 //--// private routines
-
 // init function to create the palette's genlist
 static Evas_Object *
 init_palette_genlist(Evas_Object *win)
@@ -136,6 +134,7 @@ init_palette_genlist(Evas_Object *win)
   evas_object_size_hint_weight_set(list, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
   evas_object_size_hint_align_set(list, EVAS_HINT_FILL, EVAS_HINT_FILL);
   evas_object_show(list);
+  elm_genlist_bounce_set(list, EINA_FALSE, EINA_FALSE);
 
   gli = elm_genlist_item_append(list, &itp, &container_list, NULL,
 				ELM_GENLIST_ITEM_GROUP,

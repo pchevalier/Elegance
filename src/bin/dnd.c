@@ -214,6 +214,10 @@ _dnd_mouse_down(void        *data,
                 void        *event_info)
 {
   Evas_Event_Mouse_Down *ev = event_info;
+
+  ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+	       "begin");
+
   if (ev->button != 1) return;
   evas_object_data_set(data, "--dnd_down", (void *)1);
   dx = ev->canvas.x;
@@ -227,6 +231,10 @@ _dnd_mouse_up(void        *data,
               void        *event_info)
 {
   Evas_Event_Mouse_Up *ev = event_info;
+
+  ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+	       "begin");
+
   if (ev->button != 1) return;
   evas_object_data_set(data, "--dnd_down", (void *)0);
   _dnd_finish(data, ev->canvas.x, ev->canvas.y);
