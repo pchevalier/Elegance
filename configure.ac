@@ -1,9 +1,22 @@
+# initial information about the project
 AC_INIT(elegance, 0.0.1, enlightenment-devel@lists.sourceforge.net)
-AM_INIT_AUTOMAKE([1.6 dist-bzip2])
-AC_PROG_LIBTOOL
-AC_PROG_CC
+AC_PREREQ(2.67)
+AC_CONFIG_SRCDIR(configure.ac)
+AC_CANONICAL_BUILD
+AC_CANONICAL_HOST
+AC_CANONICAL_TARGET
 
+# automake initialisation (mandatory)
+AM_INIT_AUTOMAKE(1.6 dist-bzip2)
+AM_CONFIG_HEADER(config.h)
+AC_CONFIG_MACRO_DIR([m4])
+
+AC_PROG_CC
 PKG_PROG_PKG_CONFIG
+AC_C___ATTRIBUTE__
+
+PKG_CHECK_MODULES([EFL], [eet edje emotion evas eina ecore ecore-evas ecore-x ecore-con])
+PKG_CHECK_MODULES([ELEMENTARY], [elementary])
 
 AC_CONFIG_FILES([
 Makefile
@@ -14,11 +27,6 @@ data/desktop/Makefile
 data/themes/Makefile
 data/tools/Makefile
 ])
-
-AC_OUTPUT
-
-PKG_CHECK_MODULES([EFL], [eet edje emotion evas eina ecore ecore-evas ecore-x ecore-con])
-PKG_CHECK_MODULES([ELEMENTARY], [elementary])
 
 AC_ARG_ENABLE([debug],
      [  --enable-debug          turn on debugging],
