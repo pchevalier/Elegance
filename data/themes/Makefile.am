@@ -1,13 +1,13 @@
 AUTOMAKE_OPTIONS     = 1.4 foreign
 MAINTAINERCLEANFILES = Makefile.in
 
-EDJE_CC = @edje_cc@
+EDJE_CC = @edje_cc
 EDJE_FLAGS = -v -id $(top_srcdir)/data/themes -fd $(top_srcdir)/data/themes
 filesdir = $(datadir)/elegance/themes
 files_DATA = elegance.edj \
 	plus.png \
 	 flip_base.png  \
-  	 flip_base_shad.png  \
+	 flip_base_shad.png  \
          flip_shad.png  \
          flip_0t.png  \
          flip_0b.png  \
