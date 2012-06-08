@@ -89,6 +89,13 @@ serialize_print(void)
 	       "*********************************************************");
 }
 
+void
+serialize_project(char *file __UNUSED__)
+{
+  ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+	       "begin");
+}
+
 // init main structure for serialization (see serialize.h)
 void
 serialize_init(void)

@@ -46,6 +46,7 @@ extern Elegance_Content *actual_content; // actual select content
 
 void serialize_init(void);
 void serialize_print(void);
+void serialize_project(char *file);
 void hash_table_data_free_cb(void *data);
 
 #endif

@@ -17,6 +17,7 @@ _file_chosen_save(void *data,
   ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
 	       "begin -- %s", file);
   evas_object_del(win);
+  serialize_project(file);
 }
 
 static void

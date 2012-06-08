@@ -43,11 +43,11 @@ apply_bubble_specificities(Elegance_Content *content)
   elm_object_part_text_set(content->obj, "info", eina_hash_find(content->prop,
 								"info"));
 
-  elm_icon_file_set(icon1, eina_hash_find(content->prop,
+  elm_image_file_set(icon1, eina_hash_find(content->prop,
 					  "icon 1"), NULL);
   elm_object_part_content_set(content->obj, NULL, icon1);
 
-  elm_icon_file_set(icon2, eina_hash_find(content->prop,
+  elm_image_file_set(icon2, eina_hash_find(content->prop,
 					  "icon 2"), NULL);
   elm_object_part_content_set(content->obj, "icon", icon2);
 }
@@ -70,8 +70,8 @@ apply_icon_specificities(Elegance_Content *content)
       eina_hash_add(content->prop, prop[j].name,
 		    strdup(prop[j].data));
 
-  elm_icon_file_set(content->obj, eina_hash_find(content->prop,
-						 "icon"), NULL);
+  elm_image_file_set(content->obj, eina_hash_find(content->prop,
+						  "icon"), NULL);
 }
 
 // set specific options for video
@@ -124,8 +124,8 @@ apply_button_specificities(Elegance_Content *content)
   elm_object_part_text_set(content->obj, NULL, eina_hash_find(content->prop,
 							      "label"));
 
-  elm_icon_file_set(icon, eina_hash_find(content->prop,
-					 "icon"), NULL);
+  elm_image_file_set(icon, eina_hash_find(content->prop,
+					  "icon"), NULL);
   evas_object_size_hint_max_set(icon, 50, 50);
   elm_object_part_content_set(content->obj, "icon", icon);
 }

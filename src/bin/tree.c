@@ -233,8 +233,8 @@ item_new(const char * label,
    char buf[PATH_MAX];
 
    snprintf(buf, sizeof(buf), "%s/tools/%s", PACKAGE_DATA_DIR, icon);
-   elm_icon_file_set(ic, buf, NULL);
-   elm_icon_resizable_set(ic, EINA_FALSE, EINA_FALSE);
+   elm_image_file_set(ic, buf, NULL);
+   elm_image_resizable_set(ic, EINA_FALSE, EINA_FALSE);
    return elm_popup_item_append(tree_popup, label, ic,
 				   _popup_item_cb, content);
 }

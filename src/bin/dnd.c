@@ -142,12 +142,12 @@ _dnd_action(Evas_Object *obj,
     char buf[PATH_MAX];
 
     dnd_icon = elm_icon_add(elm_object_top_widget_get(obj));
-    elm_icon_no_scale_set(dnd_icon, 1);
-    elm_icon_resizable_set(dnd_icon, EINA_FALSE, EINA_FALSE);
+    elm_image_no_scale_set(dnd_icon, 1);
+    elm_image_resizable_set(dnd_icon, EINA_FALSE, EINA_FALSE);
     evas_object_data_set(obj, "--dnd_icon", dnd_icon);
     snprintf(buf, sizeof(buf), "%s/tools/%s", PACKAGE_DATA_DIR,
 	     (const char *)evas_object_data_get(obj, "--dnd_big_icon"));
-    elm_icon_file_set(dnd_icon, buf, NULL);
+    elm_image_file_set(dnd_icon, buf, NULL);
     evas_object_show(dnd_icon);
     elm_object_scroll_freeze_push(obj);
   }
@@ -310,8 +310,8 @@ dnd_add(Evas_Object *parent)
   Evas_Object *dnd;
 
   dnd = elm_icon_add(parent);
-  elm_icon_no_scale_set(dnd, 1);
-  elm_icon_resizable_set(dnd, EINA_FALSE, EINA_FALSE);
+  elm_image_no_scale_set(dnd, 1);
+  elm_image_resizable_set(dnd, EINA_FALSE, EINA_FALSE);
   evas_object_pointer_mode_set(dnd, EVAS_OBJECT_POINTER_MODE_NOGRAB);
   evas_object_event_callback_add(dnd, EVAS_CALLBACK_MOUSE_DOWN,
 				 _dnd_mouse_down, dnd);
@@ -330,7 +330,7 @@ dnd_icon_set(Evas_Object *obj, const char *icon)
   char buf[PATH_MAX];
 
   snprintf(buf, sizeof(buf), "%s/tools/%s", PACKAGE_DATA_DIR, icon);
-  elm_icon_file_set(obj, buf, NULL);
+  elm_image_file_set(obj, buf, NULL);
 }
 
 void
