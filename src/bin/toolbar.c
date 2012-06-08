@@ -3,8 +3,96 @@
 //--// declarations
 
 //--// globals
+static Evas_Object *fs_win = NULL;
 
 //--// callbacks
+static void
+_file_chosen_save(void *data,
+		  Evas_Object *obj __UNUSED__,
+		  void *event_info)
+{
+  Evas_Object *win = data;
+  char *file = event_info;
+
+  ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+	       "begin -- %s", file);
+  evas_object_del(win);
+}
+
+static void
+_file_chosen_open(void *data,
+		  Evas_Object *obj __UNUSED__,
+		  void *event_info)
+{
+  Evas_Object *win = data;
+  char *file = event_info;
+
+  ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+	       "begin -- %s", file);
+  evas_object_del(win);
+}
+
+static Evas_Object *
+create_fs()
+{
+  Evas_Object *fs = NULL, *lay = NULL;
+
+  ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+	       "begin");
+
+  fs_win = elm_win_inwin_add(design_win);
+
+  fs = elm_fileselector_add(fs_win);
+  elm_fileselector_path_set(fs, "/home");
+  evas_object_size_hint_weight_set(fs, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+  evas_object_size_hint_align_set(fs, EVAS_HINT_FILL, EVAS_HINT_FILL);
+  elm_object_text_set(fs, "File");
+
+  evas_object_show(fs);
+
+  lay = elm_layout_add(fs_win);
+  evas_object_size_hint_weight_set(lay, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+  evas_object_size_hint_align_set(lay, EVAS_HINT_FILL, EVAS_HINT_FILL);
+  elm_layout_theme_set(lay, "layout", "application", "titlebar");
+  elm_object_part_content_set(lay, "elm.swallow.content", fs);
+  elm_object_part_text_set(lay, "elm.text", "Save");
+  evas_object_show(lay);
+
+  evas_object_size_hint_min_set(fs_win, 800, 600);
+  elm_win_inwin_content_set(fs_win, lay);
+  elm_win_inwin_activate(fs_win);
+
+  return fs;
+}
+
+//callback for saving function
+static void
+_toolbar_save_cb(void *data __UNUSED__,
+	       Evas_Object *obj __UNUSED__,
+	       void *event_info __UNUSED__)
+{
+  Evas_Object *fs = NULL;
+
+  fs = create_fs();
+  evas_object_smart_callback_add(fs,
+				 "done",
+  				 _file_chosen_save, fs_win);
+}
+
+//callback for opening function
+static void
+_toolbar_open_cb(void *data __UNUSED__,
+	       Evas_Object *obj __UNUSED__,
+	       void *event_info __UNUSED__)
+{
+  Evas_Object *fs = NULL;
+
+  fs = create_fs();
+  evas_object_smart_callback_add(fs,
+				 "done",
+  				 _file_chosen_open, fs_win);
+}
+
 // callback for new page
 void
 _toolbar_new_page_cb(void *data __UNUSED__,
@@ -73,8 +161,8 @@ toolbar_add(Evas_Object *win)
   elm_menu_item_add(menu, NULL, "folder-new", "New Page",
 		    _toolbar_new_page_cb, NULL);
 
-  elm_toolbar_item_append(tb, "default", "Open", NULL, NULL);
-  elm_toolbar_item_append(tb, "default", "Save", NULL, NULL);
+  elm_toolbar_item_append(tb, "default", "Open", _toolbar_open_cb, NULL);
+  elm_toolbar_item_append(tb, "default", "Save", _toolbar_save_cb, NULL);
 
   return tb;
 }
