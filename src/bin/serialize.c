@@ -10,10 +10,6 @@ static int lvl;
 static Eet_Data_Descriptor *_project_descriptor;
 static Eet_Data_Descriptor *_page_descriptor;
 static Eet_Data_Descriptor *_content_descriptor;
-static Eet_Data_Descriptor *_property_descriptor;
-static Eet_Data_Descriptor *_tool_descriptor;
-//static Eet_File *_file_project = NULL;
-//static Eet_Dictionary *_elegance_dict = NULL;
 
 //--// callbacks
 void
@@ -28,57 +24,14 @@ _my_cache_descriptor_init(void)
 {
    Eet_Data_Descriptor_Class eddc;
 
-   EET_EINA_FILE_DATA_DESCRIPTOR_CLASS_SET(&eddc, Elegance_Property);
-   _property_descriptor = eet_data_descriptor_file_new(&eddc);
-
-#define ADD_BASIC(member, eet_type) \
-   EET_DATA_DESCRIPTOR_ADD_BASIC					\
-     (_property_descriptor, Elegance_Property, # member, member, eet_type)
-   ADD_BASIC(name, EET_T_STRING);
-   ADD_BASIC(data, EET_T_STRING);
-#undef ADD_BASIC
-
-   EET_EINA_FILE_DATA_DESCRIPTOR_CLASS_SET(&eddc, Elegance_Tool);
-   _tool_descriptor = eet_data_descriptor_file_new(&eddc);
-
-#define ADD_BASIC(member, eet_type) \
-   EET_DATA_DESCRIPTOR_ADD_BASIC					\
-     (_tool_descriptor, Elegance_Tool, # member, member, eet_type)
-   ADD_BASIC(type, EET_T_STRING);
-   ADD_BASIC(name, EET_T_STRING);
-#undef ADD_BASIC
-
-   EET_EINA_FILE_DATA_DESCRIPTOR_CLASS_SET(&eddc, Elegance_Content);
-   _content_descriptor = eet_data_descriptor_file_new(&eddc);
-
-#define ADD_BASIC(member, eet_type) \
-   EET_DATA_DESCRIPTOR_ADD_BASIC					\
-     (_content_descriptor, Elegance_Content, # member, member, eet_type)
-   ADD_BASIC(name, EET_T_STRING);
-   ADD_BASIC(col, EET_T_UINT);
-   ADD_BASIC(row, EET_T_UINT);
-#undef ADD_BASIC
-   EET_DATA_DESCRIPTOR_ADD_SUB(_content_descriptor, Elegance_Content,
-				 "tool", tool, _tool_descriptor);
-   EET_DATA_DESCRIPTOR_ADD_HASH(_content_descriptor, Elegance_Content,
-				"prop", prop, _property_descriptor);
-   EET_DATA_DESCRIPTOR_ADD_LIST(_content_descriptor, Elegance_Content,
-				"child", child, _content_descriptor);
+   EET_EINA_FILE_DATA_DESCRIPTOR_CLASS_SET(&eddc, Elegance_Project);
+   _project_descriptor = eet_data_descriptor_file_new(&eddc);
 
    EET_EINA_FILE_DATA_DESCRIPTOR_CLASS_SET(&eddc, Elegance_Page);
    _page_descriptor = eet_data_descriptor_file_new(&eddc);
 
-#define ADD_BASIC(member, eet_type)					\
-   EET_DATA_DESCRIPTOR_ADD_BASIC					\
-     (_page_descriptor, Elegance_Page, # member, member, eet_type)
-   ADD_BASIC(name, EET_T_STRING);
-   ADD_BASIC(hide_contents, EET_T_UINT);
-#undef ADD_BASIC
-   EET_DATA_DESCRIPTOR_ADD_LIST(_page_descriptor, Elegance_Page,
-				"contents", contents, _content_descriptor);
-
-   EET_EINA_FILE_DATA_DESCRIPTOR_CLASS_SET(&eddc, Elegance_Project);
-   _project_descriptor = eet_data_descriptor_file_new(&eddc);
+   EET_EINA_FILE_DATA_DESCRIPTOR_CLASS_SET(&eddc, Elegance_Content);
+   _content_descriptor = eet_data_descriptor_file_new(&eddc);
 
 #define ADD_BASIC(member, eet_type)					\
    EET_DATA_DESCRIPTOR_ADD_BASIC					\
@@ -86,7 +39,46 @@ _my_cache_descriptor_init(void)
    ADD_BASIC(name, EET_T_STRING);
 #undef ADD_BASIC
    EET_DATA_DESCRIPTOR_ADD_LIST(_project_descriptor, Elegance_Project,
-				"pages", pages, _page_descriptor);
+   				"pages", pages, _page_descriptor);
+
+#define ADD_BASIC(member, eet_type)					\
+   EET_DATA_DESCRIPTOR_ADD_BASIC					\
+     (_page_descriptor, Elegance_Page, # member, member, eet_type)
+   ADD_BASIC(name, EET_T_STRING);
+   ADD_BASIC(hide_contents, EET_T_UCHAR);
+#undef ADD_BASIC
+   EET_DATA_DESCRIPTOR_ADD_LIST(_page_descriptor, Elegance_Page,
+   				"contents", contents, _content_descriptor);
+
+#define ADD_BASIC(member, eet_type) \
+   EET_DATA_DESCRIPTOR_ADD_BASIC					\
+     (_content_descriptor, Elegance_Content, # member, member, eet_type)
+   ADD_BASIC(name, EET_T_STRING);
+   ADD_BASIC(col, EET_T_UINT);
+   ADD_BASIC(row, EET_T_UINT);
+   ADD_BASIC(tool.type, EET_T_STRING);
+   ADD_BASIC(tool.name, EET_T_STRING);
+#undef ADD_BASIC
+   EET_DATA_DESCRIPTOR_ADD_LIST(_content_descriptor, Elegance_Content,
+   				"child", child, _content_descriptor);
+   EET_DATA_DESCRIPTOR_ADD_HASH_STRING(_content_descriptor, Elegance_Content,
+				       "prop", prop);
+
+}
+
+void
+serialize_project(char *file)
+{
+  Eet_File		*ef = NULL;
+
+  ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+	       "begin");
+
+  _my_cache_descriptor_init();
+  ef = eet_open(file, EET_FILE_MODE_WRITE);
+  eet_data_write(ef, _project_descriptor, actual_project->name,
+  		 actual_project, EINA_TRUE);
+  eet_close(ef);
 }
 
 // function to print all childs of a content
@@ -160,13 +152,6 @@ serialize_print(void)
   }
   ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
 	       "*********************************************************");
-}
-
-void
-serialize_project(char *file __UNUSED__)
-{
-  ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
-	       "begin");
 }
 
 // init main structure for serialization (see serialize.h)

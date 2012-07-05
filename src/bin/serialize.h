@@ -5,8 +5,8 @@
 typedef struct  _Elegance_Property Elegance_Property;
 struct		_Elegance_Property
 {
-    const char	*name;
-    const char	*data;
+    char	*name;
+    char	*data;
 };
 
 // structure of a page's content

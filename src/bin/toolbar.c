@@ -48,6 +48,7 @@ create_fs()
   evas_object_size_hint_weight_set(fs, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
   evas_object_size_hint_align_set(fs, EVAS_HINT_FILL, EVAS_HINT_FILL);
   elm_object_text_set(fs, "File");
+  elm_fileselector_is_save_set(fs, EINA_TRUE);
 
   evas_object_show(fs);
 
