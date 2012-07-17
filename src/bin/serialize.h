@@ -14,7 +14,7 @@ typedef struct  _Elegance_Content Elegance_Content;
 struct		_Elegance_Content
 {
     char		*name; // name of the content
-    Elegance_Tool	tool; // associated tool structure
+    Elegance_Tool	*tool; // associated tool structure
     Evas_Object		*obj; // associated Evas object
     Evas_Object		*lay; // content's layout
     Eina_List		*child; // list of content's childs
@@ -47,6 +47,7 @@ extern Elegance_Content *actual_content; // actual select content
 void serialize_init(void);
 void serialize_print(void);
 void serialize_project(char *file);
+void unserialize_project(char *file);
 void hash_table_data_free_cb(void *data);
 
 #endif

@@ -45,7 +45,7 @@ refresh_childs(Elegance_Content *data)
   elm_layout_theme_set(lay, "layout", "application", "add_in_object");
   evas_object_size_hint_weight_set(lay, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
   evas_object_size_hint_align_set(lay, EVAS_HINT_FILL, EVAS_HINT_FILL);
-  new = data->tool.function_add(design_win);
+  new = data->tool->function_add(design_win);
   elm_object_part_content_set(lay,
 			      "elm.swallow.add_in_object", new);
 
@@ -59,7 +59,7 @@ refresh_childs(Elegance_Content *data)
     {
       lay_sub = refresh_childs(data_subchild);
 
-      data->tool.function_pack(new, lay_sub,
+      data->tool->function_pack(new, lay_sub,
 			       atoi(eina_hash_find(data_subchild->prop,
 						   "col")),
 			       atoi(eina_hash_find(data_subchild->prop,
@@ -88,9 +88,10 @@ refresh_layout(Elegance_Gengrid_Item *item)
   {
     Evas_Object *new = NULL;
 
-    new = data->tool.function_add(design_win);
+    new = data->tool->function_add(design_win);
     elm_object_part_content_set(item->lay,
 				"elm.swallow.add_in_object", new);
+
     if(!strcmp(data->name, "inwin"))
     {
       elm_object_style_set(new, "elegance");
@@ -107,15 +108,15 @@ refresh_layout(Elegance_Gengrid_Item *item)
       EINA_LIST_FOREACH(data->child, l_subchild, data_subchild)
       {
 	lay = refresh_childs(data_subchild);
-      	data->tool.function_pack(new, lay,
-				 atoi(eina_hash_find(data_subchild->prop,
-						     "col")),
-				 atoi(eina_hash_find(data_subchild->prop,
-						     "row")),
-				 atoi(eina_hash_find(data_subchild->prop,
-						     "colspan")),
-				 atoi(eina_hash_find(data_subchild->prop,
-						     "rowspan")));
+      	data->tool->function_pack(new, lay,
+				  atoi(eina_hash_find(data_subchild->prop,
+						      "col")),
+				  atoi(eina_hash_find(data_subchild->prop,
+						      "row")),
+				  atoi(eina_hash_find(data_subchild->prop,
+						      "colspan")),
+				  atoi(eina_hash_find(data_subchild->prop,
+						      "rowspan")));
       }
     }
   }

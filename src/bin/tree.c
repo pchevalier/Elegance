@@ -182,7 +182,7 @@ hash_fn(const Eina_Hash *hash __UNUSED__,
 {
   Elegance_Property *prop = malloc(sizeof(Elegance_Property));
 
-  prop->name = key;
+  prop->name = (char *)key;
   prop->data = data;
   elm_genlist_item_sorted_insert(tree_list, &itc, prop, NULL,
 				 ELM_GENLIST_ITEM_NONE, gl_cmp,
@@ -259,7 +259,7 @@ _show_its_properties_cb(void           *data,
   {
     // create the popup
     tree_popup = elm_popup_add(design_win);
-    item_new(content->name, content->tool.icon_small, content);
+    item_new(content->name, content->tool->icon_small, content);
     evas_pointer_canvas_xy_get(evas_object_evas_get(obj), &x, &y);
     evas_object_move(tree_popup, x, y);
     evas_object_show(tree_popup);
@@ -267,7 +267,7 @@ _show_its_properties_cb(void           *data,
   }
   // else --> just fill it with more items
   else
-    item_new(content->name, content->tool.icon_small, content);
+    item_new(content->name, content->tool->icon_small, content);
 }
 
 // add the tree's genlist in Elegance to show item's properties

@@ -13,7 +13,6 @@ struct		_Elegance_Tool
 {
     char	*type; // container, elm or evas object
     char	*name; // the tool object
-    char	*label; // the name of the tool
     char	*icon_small; // path to the small icon of the tool
     char	*icon_big; // path to the big icon of the tool
     f_add	function_add; // adding-in function

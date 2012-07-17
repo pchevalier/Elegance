@@ -5,6 +5,9 @@
 //--// globals
 Evas_Object *view_layout = NULL;
 Evas_Object *view_inwin = NULL;
+static Elegance_Tool inwin_tool = {"special", "inwin", NULL, NULL,
+				   elm_win_inwin_add, elm_win_inwin_content_set,
+				   NULL};
 
 //--// callbacks
 
@@ -22,12 +25,12 @@ view_reload_child(Elegance_Content *data)
   elm_layout_theme_set(lay, "layout", "application", "add_in_object");
   evas_object_size_hint_weight_set(lay, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
   evas_object_size_hint_align_set(lay, EVAS_HINT_FILL, EVAS_HINT_FILL);
-  data->obj = new = data->tool.function_add(design_win);
+  data->obj = new = data->tool->function_add(design_win);
   elm_object_part_content_set(lay,
 			      "elm.swallow.add_in_object", new);
 
-  if (data->tool.function_prop)
-    data->tool.function_prop(data);
+  if (data->tool->function_prop)
+    data->tool->function_prop(data);
 
   if (data->child)
   {
@@ -38,7 +41,7 @@ view_reload_child(Elegance_Content *data)
     EINA_LIST_FOREACH(data->child, l_subchild, data_subchild)
     {
       lay_sub = view_reload_child(data_subchild);
-      data->tool.function_pack(new, lay_sub,
+      data->tool->function_pack(new, lay_sub,
 			       data_subchild->col,
 			       data_subchild->row,
 			       1, 1);
@@ -94,10 +97,10 @@ view_reload(Eina_List *list)
     content->lay = lay = elm_layout_add(design_win);
     evas_object_size_hint_weight_set(lay, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
     elm_layout_theme_set(lay, "layout", "application", "add_in_object");
-    content->obj = new = content->tool.function_add(design_win);
+    content->obj = new = content->tool->function_add(design_win);
 
-    if (content->tool.function_prop)
-      content->tool.function_prop(content);
+    if (content->tool->function_prop)
+      content->tool->function_prop(content);
 
     // special part for inwin
     if (!strcmp(content->name, "inwin"))
@@ -125,10 +128,10 @@ view_reload(Eina_List *list)
       EINA_LIST_FOREACH(content->child, l_subchild, data_subchild)
       {
 	sublay = view_reload_child(data_subchild);
-	content->tool.function_pack(new, sublay,
-				    data_subchild->col,
-				    data_subchild->row,
-				    1, 1);
+	content->tool->function_pack(new, sublay,
+				     data_subchild->col,
+				     data_subchild->row,
+				     1, 1);
       }
     }
     edje_object_signal_callback_add(elm_layout_edje_get(lay),
@@ -144,8 +147,6 @@ view_add(void)
   int i = 0;
   Evas_Object *lay, *inwin;
   Elegance_Content *content;
-  Elegance_Tool tool = {"special", "special", "special", "special", "special",
-			elm_win_inwin_add, elm_win_inwin_content_set, NULL};
   Elegance_Property prop[] = {
     { "name", "inwin" },
     { "x", "0" },
@@ -193,7 +194,7 @@ view_add(void)
   // fill content's informations and add to current page
   content->obj = inwin;
   content->lay = lay;
-  content->tool = tool;
+  content->tool = &inwin_tool;
   content->child = NULL;
   content->row = 0;
   content->col = 0;

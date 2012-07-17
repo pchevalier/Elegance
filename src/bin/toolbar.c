@@ -31,6 +31,7 @@ _file_chosen_open(void *data,
   ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
 	       "begin -- %s", file);
   evas_object_del(win);
+  unserialize_project(file);
 }
 
 static Evas_Object *

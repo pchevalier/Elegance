@@ -10,6 +10,7 @@ static int lvl;
 static Eet_Data_Descriptor *_project_descriptor;
 static Eet_Data_Descriptor *_page_descriptor;
 static Eet_Data_Descriptor *_content_descriptor;
+static Eet_Data_Descriptor *_tool_descriptor;
 
 //--// callbacks
 void
@@ -22,16 +23,19 @@ hash_table_data_free_cb(void *data)
 static void
 _my_cache_descriptor_init(void)
 {
-   Eet_Data_Descriptor_Class eddc;
+  Eet_Data_Descriptor_Class eddc;
 
-   EET_EINA_FILE_DATA_DESCRIPTOR_CLASS_SET(&eddc, Elegance_Project);
-   _project_descriptor = eet_data_descriptor_file_new(&eddc);
+  EET_EINA_FILE_DATA_DESCRIPTOR_CLASS_SET(&eddc, Elegance_Project);
+  _project_descriptor = eet_data_descriptor_file_new(&eddc);
 
    EET_EINA_FILE_DATA_DESCRIPTOR_CLASS_SET(&eddc, Elegance_Page);
    _page_descriptor = eet_data_descriptor_file_new(&eddc);
 
    EET_EINA_FILE_DATA_DESCRIPTOR_CLASS_SET(&eddc, Elegance_Content);
    _content_descriptor = eet_data_descriptor_file_new(&eddc);
+
+   EET_EINA_FILE_DATA_DESCRIPTOR_CLASS_SET(&eddc, Elegance_Tool);
+   _tool_descriptor = eet_data_descriptor_file_new(&eddc);
 
 #define ADD_BASIC(member, eet_type)					\
    EET_DATA_DESCRIPTOR_ADD_BASIC					\
@@ -56,13 +60,22 @@ _my_cache_descriptor_init(void)
    ADD_BASIC(name, EET_T_STRING);
    ADD_BASIC(col, EET_T_UINT);
    ADD_BASIC(row, EET_T_UINT);
-   ADD_BASIC(tool.type, EET_T_STRING);
-   ADD_BASIC(tool.name, EET_T_STRING);
 #undef ADD_BASIC
    EET_DATA_DESCRIPTOR_ADD_LIST(_content_descriptor, Elegance_Content,
    				"child", child, _content_descriptor);
    EET_DATA_DESCRIPTOR_ADD_HASH_STRING(_content_descriptor, Elegance_Content,
 				       "prop", prop);
+   EET_DATA_DESCRIPTOR_ADD_SUB(_content_descriptor, Elegance_Content,
+			       "tool", tool, _tool_descriptor);
+
+#define ADD_BASIC(member, eet_type) \
+   EET_DATA_DESCRIPTOR_ADD_BASIC					\
+     (_tool_descriptor, Elegance_Tool, # member, member, eet_type)
+   ADD_BASIC(name, EET_T_STRING);
+   ADD_BASIC(type, EET_T_STRING);
+   ADD_BASIC(icon_small, EET_T_STRING);
+   ADD_BASIC(icon_big, EET_T_STRING);
+#undef ADD_BASIC
 
 }
 
@@ -74,10 +87,33 @@ serialize_project(char *file)
   ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
 	       "begin");
 
-  _my_cache_descriptor_init();
   ef = eet_open(file, EET_FILE_MODE_WRITE);
-  eet_data_write(ef, _project_descriptor, actual_project->name,
+  eet_data_write(ef, _project_descriptor, "project",
   		 actual_project, EINA_TRUE);
+  eet_close(ef);
+}
+
+void
+unserialize_project(char *file)
+{
+  Eet_File *ef = eet_open(file, EET_FILE_MODE_READ);
+
+  ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+	       "begin");
+
+  if (!ef)
+  {
+    ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+		 "ERROR: could not open '%s' for read\n", file);
+    return;
+  }
+
+  actual_project = eet_data_read(ef,
+				 _project_descriptor,
+				 "project");
+
+
+
   eet_close(ef);
 }
 
@@ -183,5 +219,6 @@ serialize_init(void)
 					   page);
   // focus this page with a global pointer
   actual_page = page;
+  _my_cache_descriptor_init();
 }
 

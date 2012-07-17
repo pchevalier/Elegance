@@ -9,31 +9,31 @@ static Evas_Object *palette_list;
 
 // special list for container tools
 static const Elegance_Tool container_list[2] = {
-  { "container", "box", "Box", "box-s.png", "box-b.png",
+  { "container", "box", "box-s.png", "box-b.png",
     elm_box_add, elm_box_pack_end, NULL },
-  { "container", "table", "Table", "table-s.png", "table-b.png",
+  { "container", "table", "table-s.png", "table-b.png",
     elm_table_add, elm_table_pack, NULL },
 };
 
 // list for all elm tools
 static const Elegance_Tool elm_list[9] = {
-  { "elementary", "icon", "Icon", "icon-s.png", "icon-b.png",
+  { "elementary", "icon", "icon-s.png", "icon-b.png",
     elm_icon_add, NULL, apply_icon_specificities },
-  { "elementary", "button", "Button", "button-s.png", "button-b.png",
+  { "elementary", "button", "button-s.png", "button-b.png",
     elm_button_add, NULL, apply_button_specificities },
-  { "elementary", "clock", "Clock", "clock-s.png", "clock-b.png",
+  { "elementary", "clock", "clock-s.png", "clock-b.png",
     elm_clock_add, NULL, NULL },
-  { "elementary", "video", "Video", "video-s.png", "video-b.png",
+  { "elementary", "video", "video-s.png", "video-b.png",
     elm_video_add, NULL, apply_video_specificities },
-  { "elementary", "bubble", "Bubble", "bubble-s.png", "bubble-b.png",
+  { "elementary", "bubble", "bubble-s.png", "bubble-b.png",
     elm_bubble_add, NULL, apply_bubble_specificities },
-  { "elementary", "calendar", "Calendar", "calendar-s.png", "calendar-b.png",
+  { "elementary", "calendar", "calendar-s.png", "calendar-b.png",
     elm_calendar_add, NULL, NULL },
-  { "elementary", "entry", "Entry", "entry-s.png", "entry-b.png",
+  { "elementary", "entry", "entry-s.png", "entry-b.png",
     elm_entry_add, NULL, apply_entry_specificities },
-  { "elementary", "slider", "Slider", "slider-s.png", "slider-b.png",
+  { "elementary", "slider", "slider-s.png", "slider-b.png",
     elm_slider_add, NULL, apply_slider_specificities },
-  { "elementary", "spinner", "Spinner", "spinner-s.png", "spinner-b.png",
+  { "elementary", "spinner", "spinner-s.png", "spinner-b.png",
     elm_spinner_add, NULL, NULL },
 };
 
@@ -47,7 +47,7 @@ gl_text_get(void *data,
   char buf[256];
   Elegance_Tool *d = data;
 
-  snprintf(buf, sizeof(buf), "%s", d->label);
+  snprintf(buf, sizeof(buf), "%s", d->name);
   return strdup(buf);
 }
 
@@ -193,7 +193,7 @@ add_in_container(const Elegance_Tool *list,
   elm_layout_theme_set(lay, "layout", "application", "add_in_object");
   evas_object_size_hint_weight_set(lay, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
   evas_object_size_hint_align_set(lay, EVAS_HINT_FILL, EVAS_HINT_FILL);
-  actual_content->tool.function_pack(actual_content->obj, lay,
+  actual_content->tool->function_pack(actual_content->obj, lay,
 				     actual_content->col,
 				     actual_content->row,
 				     1, 1);
@@ -213,7 +213,7 @@ add_in_container(const Elegance_Tool *list,
   content->obj = new;
   content->lay = lay;
   content->child = NULL;
-  content->tool = list[i];
+  content->tool = &list[i];
   actual_content->child = eina_list_append(actual_content->child, content);
 
   edje_object_signal_callback_add(elm_layout_edje_get(lay),
