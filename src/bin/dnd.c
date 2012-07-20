@@ -168,7 +168,7 @@ find_and_refresh_top_actual_content(Eina_List *contents,
   if (!contents) return;
   EINA_LIST_FOREACH(contents, l, data)
   {
-    if (!strcmp(data->tool->type, "container")||
+    if (!strcmp(data->tool->type_name, "container")||
 	!strcmp(data->name, "inwin"))
     {
       Evas_Coord ox, oy, ow, oh;

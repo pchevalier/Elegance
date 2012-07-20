@@ -7,5 +7,6 @@ void view_reload(Eina_List *list);
 
 extern Evas_Object *view_layout;
 extern Evas_Object *view_inwin;
+extern const Elegance_Tool inwin_tool;
 
 #endif

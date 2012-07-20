@@ -5,9 +5,9 @@
 //--// globals
 Evas_Object *view_layout = NULL;
 Evas_Object *view_inwin = NULL;
-static Elegance_Tool inwin_tool = {"special", "inwin", NULL, NULL,
-				   elm_win_inwin_add, elm_win_inwin_content_set,
-				   NULL};
+const Elegance_Tool inwin_tool = {0, 0, "special", "inwin", NULL, NULL,
+				  elm_win_inwin_add, elm_win_inwin_content_set,
+				  NULL};
 
 //--// callbacks
 
@@ -30,7 +30,9 @@ view_reload_child(Elegance_Content *data)
 			      "elm.swallow.add_in_object", new);
 
   if (data->tool->function_prop)
+  {
     data->tool->function_prop(data);
+  }
 
   if (data->child)
   {
@@ -40,6 +42,7 @@ view_reload_child(Elegance_Content *data)
 
     EINA_LIST_FOREACH(data->child, l_subchild, data_subchild)
     {
+
       lay_sub = view_reload_child(data_subchild);
       data->tool->function_pack(new, lay_sub,
 			       data_subchild->col,
@@ -51,7 +54,6 @@ view_reload_child(Elegance_Content *data)
   edje_object_signal_callback_add(elm_layout_edje_get(lay),
 				  "_show_its_properties", "fg",
                                   _show_its_properties_cb, data);
-
   evas_object_show(lay);
   return lay;
 }

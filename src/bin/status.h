@@ -18,12 +18,14 @@ struct	       _Elegance_Gengrid
     Eina_List			*items; // list of items (page)
     Evas_Object			*gengrid; // gengrid evas object
     Eina_Bool			new_page; // there is a new page ?
+    Eina_Bool			button_plus; // add the plus button ?
     Elm_Gengrid_Item_Class	*gic; // gengrid item class
 };
 
 Evas_Object *status_add(Evas_Object *win);
 void status_refresh(void);
 Evas_Object *refresh_childs(Elegance_Content *data);
+void status_clean(void);
 
 extern Elegance_Gengrid *status_grid; // status' gengrid
 

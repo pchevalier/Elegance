@@ -71,8 +71,10 @@ _my_cache_descriptor_init(void)
 #define ADD_BASIC(member, eet_type) \
    EET_DATA_DESCRIPTOR_ADD_BASIC					\
      (_tool_descriptor, Elegance_Tool, # member, member, eet_type)
+   ADD_BASIC(position, EET_T_UINT);
+   ADD_BASIC(type, EET_T_UINT);
+   ADD_BASIC(type_name, EET_T_STRING);
    ADD_BASIC(name, EET_T_STRING);
-   ADD_BASIC(type, EET_T_STRING);
    ADD_BASIC(icon_small, EET_T_STRING);
    ADD_BASIC(icon_big, EET_T_STRING);
 #undef ADD_BASIC
@@ -93,18 +95,61 @@ serialize_project(char *file)
   eet_close(ef);
 }
 
+static void
+rebuild_tools(Elegance_Content *content)
+{
+
+  Elegance_Content *c;
+  Eina_List *l2;
+
+  EINA_LIST_FOREACH(content->child, l2, c)
+  {
+    ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+		   "Rebuild: %s %i %i", c->name,
+		   c->tool->type, c->tool->position);
+    switch (c->tool->type)
+    {
+      case 0: c->tool->function_add = inwin_tool.function_add;
+	c->tool->function_pack = inwin_tool.function_pack;
+	c->tool->function_prop = inwin_tool.function_prop;
+	break;
+      case 1: c->tool->function_add =
+	  container_list[c->tool->position].function_add;
+	c->tool->function_pack =
+	  container_list[c->tool->position].function_pack;
+	c->tool->function_prop =
+	  container_list[c->tool->position].function_prop;
+	break;
+      case 2: c->tool->function_add =
+	  elm_list[c->tool->position].function_add;
+	c->tool->function_pack =
+	  elm_list[c->tool->position].function_pack;
+	c->tool->function_prop =
+	  elm_list[c->tool->position].function_prop;
+	break;
+    }
+    if (c->child)
+      rebuild_tools(c);
+  }
+}
+
 void
 unserialize_project(char *file)
 {
   Eet_File *ef = eet_open(file, EET_FILE_MODE_READ);
+  Eina_List *l1, *l2;
+  Elegance_Page *page;
+  Elegance_Content *content;
 
   ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
 	       "begin");
 
+  view_clean(actual_page->contents);
+  status_clean();
   if (!ef)
   {
     ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
-		 "ERROR: could not open '%s' for read\n", file);
+		 "ERROR: could not open '%s' for read", file);
     return;
   }
 
@@ -112,8 +157,48 @@ unserialize_project(char *file)
 				 _project_descriptor,
 				 "project");
 
+  EINA_LIST_FOREACH(actual_project->pages, l1, page)
+  {
+    EINA_LIST_FOREACH(page->contents, l2, content)
+    {
+      ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+		   "Rebuild: %s %i %i", content->name,
+		   content->tool->type, content->tool->position);
+      switch (content->tool->type)
+      {
+	case 0:
+	  content->tool->function_add = inwin_tool.function_add;
+	  content->tool->function_pack = inwin_tool.function_pack;
+	  content->tool->function_prop = inwin_tool.function_prop;
+	  break;
+	case 1: content->tool->function_add =
+	    container_list[content->tool->position].function_add;
+	  content->tool->function_pack =
+	    container_list[content->tool->position].function_pack;
+	  content->tool->function_prop =
+	    container_list[content->tool->position].function_prop;
+	  break;
+	case 2: content->tool->function_add =
+	    elm_list[content->tool->position].function_add;
+	  content->tool->function_pack =
+	    elm_list[content->tool->position].function_pack;
+	  content->tool->function_prop =
+	    elm_list[content->tool->position].function_prop;
+	  break;
+      }
+      if (content->child)
+	rebuild_tools(content);
 
+      status_grid->new_page = EINA_TRUE;
+      actual_page = page;
+      status_refresh();
+    }
+  }
 
+  actual_page =  eina_list_data_get(actual_project->pages);
+  view_reload(actual_page->contents);
+  palette_refresh();
+  elm_genlist_clear(tree_list);
   eet_close(ef);
 }
 

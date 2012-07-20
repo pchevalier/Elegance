@@ -11,7 +11,9 @@ typedef void (*f_pack)(void *object, void *subobj,
 typedef struct  _Elegance_Tool Elegance_Tool;
 struct		_Elegance_Tool
 {
-    char	*type; // container, elm or evas object
+    int		position; //position in the palette
+    int		type;
+    char	*type_name; // container, elm or evas object
     char	*name; // the tool object
     char	*icon_small; // path to the small icon of the tool
     char	*icon_big; // path to the big icon of the tool
@@ -23,5 +25,8 @@ struct		_Elegance_Tool
 Evas_Object *palette_add(Evas_Object *win);
 void palette_refresh(void);
 void view_refresh(Evas_Object *icon);
+
+extern const Elegance_Tool elm_list[9];
+extern const Elegance_Tool container_list[2];
 
 #endif

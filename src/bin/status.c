@@ -307,10 +307,9 @@ void
 status_refresh(void)
 {
   Elegance_Gengrid_Item *item, *item_plus;
-  static Eina_Bool button_plus = EINA_FALSE;
 
   // call once to add a new page button in gengrid
-  if(!button_plus)
+  if(!status_grid->button_plus)
   {
     ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
 		 "button_plus");
@@ -325,7 +324,7 @@ status_refresh(void)
     elm_gengrid_item_append(status_grid->gengrid, status_grid->gic,
 			    item_plus, NULL, NULL);
 
-    button_plus = EINA_TRUE;
+    status_grid->button_plus = EINA_TRUE;
   }
 
   // add a new item if there is a new page
@@ -353,6 +352,16 @@ status_refresh(void)
   elm_gengrid_realized_items_update(status_grid->gengrid);
 }
 
+void
+status_clean(void)
+{
+  ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+	       "begin");
+
+  elm_gengrid_clear(status_grid->gengrid);
+  status_grid->button_plus = EINA_FALSE;
+}
+
 // init function for status gengrid
 Evas_Object *
 status_add(Evas_Object *win)
@@ -366,6 +375,7 @@ status_add(Evas_Object *win)
   status_grid = malloc(sizeof(Elegance_Gengrid));
   status_grid->new_page = EINA_TRUE;
   status_grid->items = NULL;
+  status_grid->button_plus = EINA_FALSE;
 
   // create gengrid
   status_grid->gengrid = grid = elm_gengrid_add(win);

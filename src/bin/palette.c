@@ -8,32 +8,32 @@ static Elm_Genlist_Item_Class itp;
 static Evas_Object *palette_list;
 
 // special list for container tools
-static const Elegance_Tool container_list[2] = {
-  { "container", "box", "box-s.png", "box-b.png",
+const Elegance_Tool container_list[2] = {
+  { 0, 1, "container", "box", "box-s.png", "box-b.png",
     elm_box_add, elm_box_pack_end, NULL },
-  { "container", "table", "table-s.png", "table-b.png",
+  { 1, 1, "container", "table", "table-s.png", "table-b.png",
     elm_table_add, elm_table_pack, NULL },
 };
 
 // list for all elm tools
-static const Elegance_Tool elm_list[9] = {
-  { "elementary", "icon", "icon-s.png", "icon-b.png",
+const Elegance_Tool elm_list[9] = {
+  { 0, 2, "elementary", "icon", "icon-s.png", "icon-b.png",
     elm_icon_add, NULL, apply_icon_specificities },
-  { "elementary", "button", "button-s.png", "button-b.png",
+  { 1, 2, "elementary", "button", "button-s.png", "button-b.png",
     elm_button_add, NULL, apply_button_specificities },
-  { "elementary", "clock", "clock-s.png", "clock-b.png",
+  { 2, 2, "elementary", "clock", "clock-s.png", "clock-b.png",
     elm_clock_add, NULL, NULL },
-  { "elementary", "video", "video-s.png", "video-b.png",
+  { 3, 2, "elementary", "video", "video-s.png", "video-b.png",
     elm_video_add, NULL, apply_video_specificities },
-  { "elementary", "bubble", "bubble-s.png", "bubble-b.png",
+  { 4, 2, "elementary", "bubble", "bubble-s.png", "bubble-b.png",
     elm_bubble_add, NULL, apply_bubble_specificities },
-  { "elementary", "calendar", "calendar-s.png", "calendar-b.png",
+  { 5, 2, "elementary", "calendar", "calendar-s.png", "calendar-b.png",
     elm_calendar_add, NULL, NULL },
-  { "elementary", "entry", "entry-s.png", "entry-b.png",
+  { 6, 2, "elementary", "entry", "entry-s.png", "entry-b.png",
     elm_entry_add, NULL, apply_entry_specificities },
-  { "elementary", "slider", "slider-s.png", "slider-b.png",
+  { 7, 2, "elementary", "slider", "slider-s.png", "slider-b.png",
     elm_slider_add, NULL, apply_slider_specificities },
-  { "elementary", "spinner", "spinner-s.png", "spinner-b.png",
+  { 8, 2, "elementary", "spinner", "spinner-s.png", "spinner-b.png",
     elm_spinner_add, NULL, NULL },
 };
 
