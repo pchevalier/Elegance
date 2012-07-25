@@ -2,12 +2,4 @@ TODO:
 
   * add more elements to palette (palette.c)
   * build the snippet bar with some default efl theme (snippet.c)
-  * continue to implement the toolbar (open project, save project, save project as, new page, new project, ...) (toolbar.c)
-
-Work in progress:
-
-  * build the properties modifying system of objects in tree (tree.c) pchevalier (Patrick Chevalier) <patrick.chevalier@openwide.fr>
-
-Done:
-  * build the project struct serialisation system (serialize.c)       pchevalier (Patrick Chevalier) <patrick.chevalier@openwide.fr>
-  * build page system in the status bar (status.c)		      pchevalier (Patrick Chevalier) <patrick.chevalier@openwide.fr>
+  * delete page funtion

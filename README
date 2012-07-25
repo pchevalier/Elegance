@@ -1,10 +1,14 @@
 Elegance - GUI Elementary widget editor
 
 To begin:	autoreconf -vif -I m4 && ./configure
-To compile:	make [-j]
+To compile:	make [-jd]
 
 Use ./script_init to begin and compile :)
 To print Elegance log messages use: ./configure --enable-debug
 
 To install:	sudo make install
 To run:		elegance
+
+options:
+		-j	run simultaneously several jobs
+		-d 	build Elegance in debugging mode
