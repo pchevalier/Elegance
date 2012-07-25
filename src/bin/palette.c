@@ -38,6 +38,13 @@ const Elegance_Tool elm_list[9] = {
 };
 
 //--// callbacks
+// hash table's callback
+static void
+hash_table_data_free_cb(void *data)
+{
+  free(data);
+}
+
 // genlist's callback
 static char *
 gl_text_get(void *data,
@@ -148,6 +155,7 @@ init_palette_genlist(Evas_Object *win)
   return (list);
 }
 
+//--// functions
 // function called when an object has to be added in a container
 static void
 add_in_container(const Elegance_Tool *list,
@@ -171,13 +179,14 @@ add_in_container(const Elegance_Tool *list,
   ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
 	       "begin -- actual_content : %s", actual_content->name);
 
+  // create a new content
   content = malloc(sizeof(Elegance_Content));
   content->name = strdup(list[i].name);
   content->row = actual_content->row;
   content->col = actual_content->col;
-
   content->prop = eina_hash_string_superfast_new(hash_table_data_free_cb);
 
+  // save its properties
   for (j = 0; prop[j].name != NULL; j++)
   {
     eina_hash_add(content->prop, prop[j].name,
@@ -185,10 +194,10 @@ add_in_container(const Elegance_Tool *list,
   }
   snprintf(buf, sizeof(buf), "%i", actual_content->col + 1);
   eina_hash_add(content->prop, "col", strdup(buf));
-
   snprintf(buf, sizeof(buf), "%i", actual_content->row + 1);
   eina_hash_add(content->prop, "row", strdup(buf));
 
+  // add the new content into the view
   lay = elm_layout_add(design_win);
   elm_layout_theme_set(lay, "layout", "application", "add_in_object");
   evas_object_size_hint_weight_set(lay, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
@@ -210,19 +219,23 @@ add_in_container(const Elegance_Tool *list,
     actual_content->row++;
   }
 
+  // save some content's information
   content->obj = new;
   content->lay = lay;
   content->child = NULL;
   content->tool = &list[i];
   actual_content->child = eina_list_append(actual_content->child, content);
 
+  // add a callback to show one content's property
   edje_object_signal_callback_add(elm_layout_edje_get(lay),
 				  "_show_its_properties", "fg",
                                   _show_its_properties_cb, content);
 
+  // apply specific properties
   if (list[i].function_prop)
     list[i].function_prop(content);
 
+  // refresh palette and save the actual content
   if (list == container_list)
   {
     actual_content = content;
@@ -230,12 +243,12 @@ add_in_container(const Elegance_Tool *list,
     palette_refresh();
   }
 
+  // show
   evas_object_show(lay);
   evas_object_show(new);
 }
 
-//--// public routines
-// first adding function of palette that add containers into
+// create palette
 Evas_Object *
 palette_add(Evas_Object *win)
 {
@@ -251,14 +264,14 @@ palette_add(Evas_Object *win)
   return o;
 }
 
-// second function to add other tools
-// after the adding of a container into the view
+
+// refresh palette and its contents
 void
 palette_refresh(void)
 {
-  int i = 0;
+  uint i = 0;
   Eina_List *list = elm_genlist_realized_items_get(palette_list);
-  int list_size = eina_list_count(list);
+  uint list_size = eina_list_count(list);
 
   ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
 	       "begin");
@@ -269,7 +282,7 @@ palette_refresh(void)
     Eina_List *l;
     Elm_Object_Item *it;
 
-    // hide all items exept containers
+    // hide all items exept containers in the palette
     EINA_LIST_REVERSE_FOREACH(list, l, it)
     {
       if (i < sizeof(elm_list)/sizeof(elm_list[0]) + 1)
@@ -281,11 +294,11 @@ palette_refresh(void)
 
   if(!actual_page->hide_contents)
   {
+    // add all palette's items
     if(list_size <=  sizeof(container_list)/sizeof(container_list[0])+1)
     {
       Elm_Object_Item *gli;
 
-      // add other tools into the palette's tab
       gli = elm_genlist_item_append(palette_list, &itp, &elm_list, NULL,
 				    ELM_GENLIST_ITEM_GROUP,
 				    NULL, NULL);
@@ -299,12 +312,12 @@ palette_refresh(void)
   }
 }
 
-// usefull function that detect if a container is added into the inwin (view)
+// refresh the central view
 void
 view_refresh(Evas_Object *icon)
 {
   char *buf;
-  int i = 0;
+  uint i = 0;
 
   ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
 	       "begin");

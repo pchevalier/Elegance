@@ -1,11 +1,10 @@
 #include "main.h"
 
 //--// declarations
-
-//--// globals
 static Evas_Object *fs_win = NULL;
 
 //--// callbacks
+// file browser's callbacks
 static void
 _file_chosen_save(void *data,
 		  Evas_Object *obj __UNUSED__,
@@ -34,6 +33,7 @@ _file_chosen_open(void *data,
   unserialize_project(file);
 }
 
+// callback called when the file browser is needed
 static Evas_Object *
 create_fs()
 {
@@ -44,13 +44,13 @@ create_fs()
 
   fs_win = elm_win_inwin_add(design_win);
 
+  // create file selector
   fs = elm_fileselector_add(fs_win);
   elm_fileselector_path_set(fs, "/home");
   evas_object_size_hint_weight_set(fs, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
   evas_object_size_hint_align_set(fs, EVAS_HINT_FILL, EVAS_HINT_FILL);
   elm_object_text_set(fs, "File");
   elm_fileselector_is_save_set(fs, EINA_TRUE);
-
   evas_object_show(fs);
 
   lay = elm_layout_add(fs_win);
@@ -163,7 +163,6 @@ toolbar_add(Evas_Object *win)
 		    _toolbar_new_project_cb, NULL);
   elm_menu_item_add(menu, NULL, "folder-new", "New Page",
 		    _toolbar_new_page_cb, NULL);
-
   elm_toolbar_item_append(tb, "default", "Open", _toolbar_open_cb, NULL);
   elm_toolbar_item_append(tb, "default", "Save", _toolbar_save_cb, NULL);
 

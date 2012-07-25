@@ -1,13 +1,16 @@
 #include "main.h"
 #ifndef ELM_LIB_QUICKLAUNCH
 
+// global used for the debugging mode
+// it represents the domain log level
 int elegance_log_dom = -1;
 
+// main function wich launch Elegance
 EAPI int
 elm_main(int argc __UNUSED__,
          char **argv __UNUSED__)
 {
-  Elm_Theme *th;
+  Elm_Theme *th; // theme of Elegance
 
   // define my own domain
 # ifdef DEBUG
@@ -26,6 +29,8 @@ elm_main(int argc __UNUSED__,
 
   // launch elegance
   elm_run();
+
+  // exit
   elm_shutdown();
   return 0;
 }

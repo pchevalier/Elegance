@@ -16,8 +16,11 @@
 # include "view.h"
 # include "dnd.h"
 
+//--// extern global
 extern int elegance_log_dom;
 
+//--// macros
+//special macro for debug mode
 # ifdef DEBUG
 #  define ELEGANCE_LOG(level, msg, ...)		\
   EINA_LOG(elegance_log_dom,			\

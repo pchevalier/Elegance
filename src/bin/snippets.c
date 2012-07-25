@@ -17,7 +17,7 @@ snippets_add(Evas_Object *win)
   elm_toolbar_menu_parent_set(tb, win);
 
   // FIXME: fill the toolbar
-  elm_toolbar_item_append(tb, "default", "42", NULL, NULL);
+  elm_toolbar_item_append(tb, "default", "To Fill", NULL, NULL);
 
   return tb;
 }

@@ -1,8 +1,6 @@
 #include "main.h"
 
-//--// declarations
-
-//--// globals
+//--// typedef
 // pointer to elegance function for initialisation of a box
 typedef Evas_Object *(*panel_content_add)(Evas_Object *win);
 
@@ -78,7 +76,7 @@ panel_add(Evas_Object		*win,
 void
 panels_add(void)
 {
-  int		i = 0;
+  uint		i = 0;
 
   // for all boxes
   for (i = 0; i < sizeof (boxes) / sizeof (boxes[0]); i++)

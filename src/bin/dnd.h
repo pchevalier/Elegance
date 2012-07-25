@@ -1,5 +1,6 @@
 #ifndef DND_H
 # define DND_H
+// by raster
 
 typedef enum
 {

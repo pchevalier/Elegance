@@ -1,17 +1,21 @@
 #include "main.h"
 
-//--// declarations
-
-//--// globals
-Evas_Object *view_layout = NULL;
-Evas_Object *view_inwin = NULL;
+//--// extern globals
+Evas_Object *view_layout = NULL; // the view's layout
+Evas_Object *view_inwin = NULL; // the view's inwin
 const Elegance_Tool inwin_tool = {0, 0, "special", "inwin", NULL, NULL,
 				  elm_win_inwin_add, elm_win_inwin_content_set,
-				  NULL};
+				  NULL}; // specific Elegance_Tool for view's inwin
 
 //--// callbacks
+// hash table's callback
+static void
+hash_table_data_free_cb(void *data)
+{
+  free(data);
+}
 
-//--// private routines
+//--// function
 // recursive function for contents and their child
 static Evas_Object *
 view_reload_child(Elegance_Content *data)
@@ -58,7 +62,6 @@ view_reload_child(Elegance_Content *data)
   return lay;
 }
 
-//--// public routines
 // clean working view
 void
 view_clean(Eina_List *list)

@@ -1,17 +1,15 @@
 #include "main.h"
 
-//--// declarations
+//--// static
+static Elm_Genlist_Item_Class itc; // itc used for the tree's genlist
+static Elegance_Content *actual_selected; // used to know wich content is selected
+static Evas_Object *tree_popup = NULL; // the tree's elm_popup
 
-//--// globals
-static Elm_Genlist_Item_Class itc;
-static Elegance_Content *actual_selected;
-static Evas_Object *tree_popup;
-
-Evas_Object *tree_list;
-Eina_Bool popup_on = EINA_FALSE;
+//--// global extern
+Evas_Object *tree_list; // the tree's genlist
+Eina_Bool popup_on = EINA_FALSE; // boolean used for the popup
 
 //--// callbacks
-// others
 // callback for fileselector button
 static void
 _file_chosen(void *data,
@@ -213,6 +211,9 @@ _popup_item_cb(void *data,
 {
   Elegance_Content *content = data;
 
+  ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+	       "begin");
+
   if (actual_selected != content)
   {
     elm_genlist_clear(tree_list);
@@ -224,7 +225,7 @@ _popup_item_cb(void *data,
 
 // others
 // usefull function to fill the choising item popup with icon
-static Elm_Object_Item *
+static void
 item_new(const char * label,
 	 const char *icon,
 	 Elegance_Content *content)
@@ -232,11 +233,13 @@ item_new(const char * label,
    Evas_Object *ic = elm_icon_add(tree_popup);
    char buf[PATH_MAX];
 
+   ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
+		"begin");
+
    snprintf(buf, sizeof(buf), "%s/tools/%s", PACKAGE_DATA_DIR, icon);
    elm_image_file_set(ic, buf, NULL);
-   elm_image_resizable_set(ic, EINA_FALSE, EINA_FALSE);
-   return elm_popup_item_append(tree_popup, label, ic,
-				   _popup_item_cb, content);
+   elm_popup_item_append(tree_popup, label, ic,
+			 _popup_item_cb, content);
 }
 
 //--// public routines
@@ -259,6 +262,8 @@ _show_its_properties_cb(void           *data,
   {
     // create the popup
     tree_popup = elm_popup_add(design_win);
+    evas_object_size_hint_weight_set(tree_popup,
+				     EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
     item_new(content->name, content->tool->icon_small, content);
     evas_pointer_canvas_xy_get(evas_object_evas_get(obj), &x, &y);
     evas_object_move(tree_popup, x, y);

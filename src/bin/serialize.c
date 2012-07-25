@@ -1,25 +1,19 @@
 #include "main.h"
 
-//--// declarations
+//--// globals
 Elegance_Project *actual_project = NULL; // actual opened project
 Elegance_Page *actual_page = NULL; // actual select page
 Elegance_Content *actual_content = NULL; // actual select content
 
-//--// globals
-static int lvl;
+static int lvl; // level of the child (used into the print function)
+// serialisation's data descriptors
 static Eet_Data_Descriptor *_project_descriptor;
 static Eet_Data_Descriptor *_page_descriptor;
 static Eet_Data_Descriptor *_content_descriptor;
 static Eet_Data_Descriptor *_tool_descriptor;
 
-//--// callbacks
-void
-hash_table_data_free_cb(void *data)
-{
-  free(data);
-}
-
 //--// private routines
+// the cache descriptor function used to (un)serialse a project
 static void
 _my_cache_descriptor_init(void)
 {
@@ -81,6 +75,7 @@ _my_cache_descriptor_init(void)
 
 }
 
+// serialisation function
 void
 serialize_project(char *file)
 {
@@ -89,12 +84,16 @@ serialize_project(char *file)
   ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
 	       "begin");
 
+  // open the file 'file'
   ef = eet_open(file, EET_FILE_MODE_WRITE);
+  // write into file
   eet_data_write(ef, _project_descriptor, "project",
   		 actual_project, EINA_TRUE);
+  // close file
   eet_close(ef);
 }
 
+// function used to rebuild the project structure
 static void
 rebuild_tools(Elegance_Content *content)
 {
@@ -133,10 +132,11 @@ rebuild_tools(Elegance_Content *content)
   }
 }
 
+// unserialisation function
 void
 unserialize_project(char *file)
 {
-  Eet_File *ef = eet_open(file, EET_FILE_MODE_READ);
+  Eet_File *ef;
   Eina_List *l1, *l2;
   Elegance_Page *page;
   Elegance_Content *content;
@@ -144,8 +144,12 @@ unserialize_project(char *file)
   ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
 	       "begin");
 
+  // clean
   view_clean(actual_page->contents);
   status_clean();
+
+  // open the file + verification
+  ef = eet_open(file, EET_FILE_MODE_READ);
   if (!ef)
   {
     ELEGANCE_LOG(EINA_LOG_LEVEL_DBG,
@@ -153,10 +157,12 @@ unserialize_project(char *file)
     return;
   }
 
+  // read the file
   actual_project = eet_data_read(ef,
 				 _project_descriptor,
 				 "project");
 
+  // restaure the project structure
   EINA_LIST_FOREACH(actual_project->pages, l1, page)
   {
     EINA_LIST_FOREACH(page->contents, l2, content)
@@ -195,10 +201,14 @@ unserialize_project(char *file)
     }
   }
 
+  // restaure the actual page
   actual_page =  eina_list_data_get(actual_project->pages);
+  // refresh the view and the palette
   view_reload(actual_page->contents);
   palette_refresh();
+  // clear the property genlist (right side)
   elm_genlist_clear(tree_list);
+  // close file
   eet_close(ef);
 }
 
@@ -246,7 +256,6 @@ serialize_print_contents(Elegance_Page *obj1)
   }
 }
 
-//--// public routines
 // this function can print all elements of the actual project
 void
 serialize_print(void)
@@ -304,6 +313,7 @@ serialize_init(void)
 					   page);
   // focus this page with a global pointer
   actual_page = page;
+  // initialisation of the cache descriptor
   _my_cache_descriptor_init();
 }
 

@@ -1,12 +1,13 @@
 #ifndef SERIALIZE_H_
 # define SERIALIZE_H_
 
+//--// structures
 // structure of a property's content
 typedef struct  _Elegance_Property Elegance_Property;
 struct		_Elegance_Property
 {
-    char	*name;
-    char	*data;
+    char	*name; // property's name
+    char	*data; // property's value
 };
 
 // structure of a page's content
@@ -40,14 +41,15 @@ struct		_Elegance_Project
     Eina_List		*pages; // pages' list
 };
 
+//--// global extern
 extern Elegance_Project *actual_project; // actual opened project
 extern Elegance_Page *actual_page; // actual select page
 extern Elegance_Content *actual_content; // actual select content
 
-void serialize_init(void);
-void serialize_print(void);
-void serialize_project(char *file);
-void unserialize_project(char *file);
-void hash_table_data_free_cb(void *data);
+//--// functions
+void serialize_init(void); // initialise project's structure & serialisation system
+void serialize_print(void); // print actual project
+void serialize_project(char *file); // serialize project
+void unserialize_project(char *file); // unserialize project
 
 #endif

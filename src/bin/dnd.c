@@ -2,7 +2,7 @@
 
 //--// declarations
 
-//--// globals
+//--// extern globals
 static Evas_Coord dx, dy, dropx, dropy;
 static Eina_List *targets = NULL;
 

@@ -1,6 +1,7 @@
 #include "main.h"
 
 //--// callbacks
+// special callback for video tool
 static void
 _loop_video_cb(void *data __UNUSED__,
 	       Evas_Object *obj,
@@ -14,7 +15,7 @@ _loop_video_cb(void *data __UNUSED__,
 }
 
 
-//--// public routines
+//--// function
 // set specific options for bubble
 void
 apply_bubble_specificities(Elegance_Content *content)

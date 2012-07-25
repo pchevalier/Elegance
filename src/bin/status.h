@@ -1,6 +1,7 @@
 #ifndef STATUS_H_
 # define STATUS_H_
 
+//--// structures
 // structure of gengrid's items
 typedef struct _Elegance_Gengrid_Item Elegance_Gengrid_Item;
 struct	       _Elegance_Gengrid_Item
@@ -22,11 +23,12 @@ struct	       _Elegance_Gengrid
     Elm_Gengrid_Item_Class	*gic; // gengrid item class
 };
 
-Evas_Object *status_add(Evas_Object *win);
-void status_refresh(void);
-Evas_Object *refresh_childs(Elegance_Content *data);
-void status_clean(void);
+//--// functions
+Evas_Object *status_add(Evas_Object *win); // create the status bar
+void status_refresh(void); // refresh status' contents
+void status_clean(void); // clean the status bar
 
+//--// extern global
 extern Elegance_Gengrid *status_grid; // status' gengrid
 
 #endif

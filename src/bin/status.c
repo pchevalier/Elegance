@@ -6,7 +6,7 @@
 Elegance_Gengrid *status_grid = NULL;
 static Evas_Object *status_popup = NULL;
 
-//--// callbacks
+//--// gengrid's callbacks
 static char *
 _grid_label_get(void        *data,
                 Evas_Object *obj __UNUSED__,
@@ -33,7 +33,7 @@ _grid_del(void        *data __UNUSED__,
 }
 
 // return layout with contents for refresh_layout
-Evas_Object *
+static Evas_Object *
 refresh_childs(Elegance_Content *data)
 {
   Evas_Object *new, *lay;
