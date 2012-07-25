@@ -141,7 +141,6 @@ init_palette_genlist(Evas_Object *win)
   evas_object_size_hint_weight_set(list, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
   evas_object_size_hint_align_set(list, EVAS_HINT_FILL, EVAS_HINT_FILL);
   evas_object_show(list);
-  elm_genlist_bounce_set(list, EINA_FALSE, EINA_FALSE);
 
   gli = elm_genlist_item_append(list, &itp, &container_list, NULL,
 				ELM_GENLIST_ITEM_GROUP,

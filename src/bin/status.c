@@ -386,7 +386,6 @@ status_add(Evas_Object *win)
   elm_gengrid_align_set(grid, 0, 0.5);
   elm_gengrid_multi_select_set(grid, EINA_FALSE);
   elm_gengrid_select_mode_set(grid, ELM_OBJECT_SELECT_MODE_NONE);
-  elm_gengrid_bounce_set(grid, EINA_TRUE, EINA_FALSE);
 
   // initialisation of the gengrid item class
   status_grid->gic = elm_gengrid_item_class_new();

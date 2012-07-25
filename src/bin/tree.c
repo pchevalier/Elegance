@@ -300,7 +300,6 @@ tree_add(Evas_Object *win)
 				   EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
   evas_object_size_hint_align_set(tree_list,
 				  EVAS_HINT_FILL, EVAS_HINT_FILL);
-  elm_genlist_bounce_set(tree_list, EINA_FALSE, EINA_FALSE);
   evas_object_show(tree_list);
 
   return tree_list;
